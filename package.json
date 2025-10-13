@@ -1,0 +1,24 @@
+{
+  "name": "cartasocial_site",
+  "version": "1.0.0",
+  "description": "**Projeto criado com finalidades educativas e para portfólio como comprovação de hard e softskills**",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./backend/src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "mysql2": "^3.15.2",
+    "nodemon": "^3.1.10",
+    "path": "^0.12.7"
+  }
+}
