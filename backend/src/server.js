@@ -3,15 +3,13 @@ const express = require('express');
 //importação de pacotes essenciais
 const dbPool = require('./models/connection.js');
 const path = require('path');
-const session = require('express-session');
+const session = require('express-session'); //Vai gerenciar o estado de logado ou não
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//Importação de rotas
-//const authRoutes = require('./routers/authRoutes');
 
 //Middlewares
 app.use(express.json());
@@ -34,10 +32,6 @@ app.set('views', path.join(__dirname, 'views'));
 //rotas temporárias e gerais
 const authRoutes = require('./routers/authRoutes.js');
 app.use('/', authRoutes);
-
-app.get("/teste", (req,res)=>{
-  res.send(`Teste de requisição`)
-})
 
 app.get('/', (req, res) => {
     if (req.session.userId) {
