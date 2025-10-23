@@ -1,55 +1,53 @@
 const express = require('express');
 
 //importação de pacotes essenciais
-const dbPool = require('./models/connection.js');
 const path = require('path');
-const session = require('express-session'); //Vai gerenciar o estado de logado ou não
-const bcrypt = require('bcrypt');
+const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.set('view engine', 'ejs');
+const VIEWS_ROOT = path.join(__dirname, 'views')
+app.set('views', VIEWS_ROOT);
 
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 //Configuração de sessão para login
 app.use(session({
-    // Usa uma chave secreta do .env (deve ser forte e aleatória)
-    secret: process.env.SESSION_SECRET || 'chave-secreta-default', 
-    resave: false, // Evita salvar a sessão se nada mudou
-    saveUninitialized: false, // Evita criar sessões vazias
-    cookie: { secure: process.env.NODE_ENV === 'production' } // Configurar HTTPS em produção
+    secret: process.env.SESSION_SECRET || 'chave-secreta-default',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
-//Configurações da view
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
-//rotas temporárias e gerais
 const authRoutes = require('./routers/authRoutes.js');
 app.use('/', authRoutes);
 
 app.get('/', (req, res) => {
     if (req.session.userId) {
-        // Se logado, vai para o feed
-        return res.redirect('/feed'); 
+        return res.redirect('/feed');
+    } else {
+        res.redirect('/login');
     }
-    // Se não logado, vai para o login
-    res.redirect('/login'); 
 });
 
 app.get('/feed', (req, res) => {
+    console.log('ID do Usuário na Sessão:', req.session.userId); 
+    
     if (!req.session.userId) {
-        return res.redirect('/login'); // Proteção básica
+        return res.redirect('/login');
     }
-    // Renderiza o feed com o nome do usuário logado
-    res.render('feed', { username: req.session.username });
+    // A rota /feed deve renderizar a página do feed
+    res.render('pages/feed', { username: req.session.username }); 
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+if(require.main === module){
+    app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});}

@@ -1,21 +1,21 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-// O Router depende e importa o Controller para usar as funções de lógica
-const authController = require('../controllers/authController');
 
-// Rota GET: Formulário de Cadastro
-router.get('/register', authController.getRegisterPage);
+const authController = require("../controllers/authController.js");
 
-// Rota POST: Processamento do Cadastro
-router.post('/register', authController.registerUser);
+//Formulário de cadastro
+router.get("/register", authController.getRegisterPage);
 
-// Rota GET: Formulário de Login
-router.get('/login', authController.getLoginPage);
+//Processa o cadastro do usuário
+router.post("/register", authController.registerUser);
 
-// Rota POST: Processamento do Login
-router.post('/login', authController.loginUser);
+//Formulário de login login
+router.get("/login", authController.getLoginPage);
 
-// Rota POST: Logout
-router.post('/logout', authController.logoutUser);
+//Processa página de login com usuário
+router.post("/login", authController.loginUser);
+
+//Rota de quando usuário quer sair da conta
+router.post("logout", authController.logoutUser);
 
 module.exports = router;

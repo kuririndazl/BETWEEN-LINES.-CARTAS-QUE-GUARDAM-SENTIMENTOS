@@ -1,69 +1,101 @@
-const userModel = require('../models/userModel');
+// authController.js
+
+const userModel = require('../models/userModel.js');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10; 
 
 exports.getRegisterPage = (req, res) => {
+    if (req.session.userId) {
+        return res.redirect('/feed'); 
+    }
     res.render('pages/register', { error: null }); 
 };
 
 exports.registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, confirm_password } = req.body;
     
-    // ... validação dos dados
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !confirm_password) {
         return res.render('pages/register', { error: 'Por favor, preencha todos os campos.' });
     }
 
+    if (password !== confirm_password) {
+        return res.render('pages/register', { error: 'As senhas não coincidem.' });
+    }
+
     try {
+        const existingUser = await userModel.findUserByEmail(email);
+        if (existingUser) {
+            return res.render('pages/register', { error: 'E-mail já cadastrado.' });
+        }
+        
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
         await userModel.createUser(username, email, passwordHash);
         
-        res.redirect('/login'); 
+        // Cadastro bem-sucedido
+        return res.redirect('/login'); 
 
     } catch (error) {
-        console.error('Erro de registro:', error);
+        console.error('--- ERRO FATAL NO CADASTRO ---');
+        console.error(error);
+        
+        // Verifica se o erro é de duplicidade de e-mail (se não pego antes)
         if (error.code === 'ER_DUP_ENTRY') {
-            return res.render('pages/register', { error: 'E-mail já cadastrado.' }); 
+            return res.render('pages/register', { error: 'E-mail já cadastrado.' });
         }
-        res.render('pages/register', { error: 'Ocorreu um erro ao tentar se cadastrar.' });
+        
+        return res.render('pages/register', { error: 'Ocorreu um erro interno no servidor.' });
     }
 };
 
-// C. Função para exibir a página de Login (GET /login)
 exports.getLoginPage = (req, res) => {
+    if (req.session.userId) {
+        return res.redirect('/feed'); 
+    }
     res.render('pages/login', { error: null }); 
 };
 
-// D. Função para processar o Login (POST /login)
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // ...
+        const user = await userModel.findUserByEmail(email); 
+
         if (!user) {
             return res.render('pages/login', { error: 'E-mail ou senha inválidos.' });
         }
         
-        // ... comparação e validação
+        // A chave 'passwordHash' deve existir graças ao userModel.js
+        const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+
         if (isPasswordValid) {
             if (user.is_banned) {
                 return res.render('pages/login', { error: 'Sua conta está banida.' });
             }
             
-            // ... gerar sessão
+            // CRIAÇÃO DA SESSÃO
+            req.session.userId = user.id; 
+            req.session.username = user.username;
             
-            return res.redirect('/feed'); 
+            // GARANTINDO O REDIRECIONAMENTO COM A SESSÃO SALVA
+            req.session.save(err => {
+                if (err) {
+                    console.error('Erro ao salvar sessão:', err);
+                    return res.render('pages/login', { error: 'Erro de sessão interna.' });
+                }
+                
+                return res.redirect('/feed'); 
+            });
+
         } else {
-            res.render('pages/login', { error: 'E-mail ou senha inválidos.' });
+            return res.render('pages/login', { error: 'E-mail ou senha inválidos.' });
         }
 
     } catch (error) {
         console.error('Erro de login:', error);
-        res.render('pages/login', { error: 'Ocorreu um erro interno no servidor.' });
+        return res.render('pages/login', { error: 'Ocorreu um erro interno no servidor.' });
     }
 };
 
-// E. Função para processar o Logout (POST /logout)
 exports.logoutUser = (req, res) => {
     req.session.destroy(err => {
         if (err) {

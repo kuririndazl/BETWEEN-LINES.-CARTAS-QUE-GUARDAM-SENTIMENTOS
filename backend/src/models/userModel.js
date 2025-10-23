@@ -1,24 +1,24 @@
 const { pool } = require('./connection');
 
-//Cria um novo usuário no DB (usado no Cadastro)
 async function createUser(username, email, passwordHash) {
-    //A senha tem que vir criptografada do controller
-    const [result] = await pool.query( // await pool query(comando) para passar um comando sql
-        'INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)',
-        [username, email, passwordHash]
-    );
-    // Retorna o ID do novo usuário (útil para login automático pós-cadastro)
+    const [result] = await pool.query(
+        'INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)', [username, email, passwordHash]);
     return result.insertId; 
 }
 
-//Busca um usuário pelo email (usado no Login)
 async function findUserByEmail(email) {
     const [rows] = await pool.query(
-        'SELECT * FROM Users WHERE email = ?',
+        'SELECT user_id, username, email, password_hash, is_banned FROM Users WHERE email = ?',
         [email]
     );
-    // Retorna o objeto do usuário ou 'undefined' se não encontrado
-    return rows[0]; 
+    // Renomeando a coluna password_hash para passwordHash para corresponder ao controller
+    if (rows && rows.length > 0) {
+        const user = rows[0];
+        user.passwordHash = user.password_hash;
+        delete user.password_hash;
+        return user;
+    }
+    return null; 
 }
 
 module.exports = {

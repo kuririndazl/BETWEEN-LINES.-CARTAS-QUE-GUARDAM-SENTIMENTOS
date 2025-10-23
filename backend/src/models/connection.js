@@ -1,5 +1,5 @@
-require('dotenv').config();
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -27,4 +27,4 @@ async function testConnection() {
 // Chamar a função de teste
 testConnection();
 
-module.exports = pool;
+module.exports = {pool};
