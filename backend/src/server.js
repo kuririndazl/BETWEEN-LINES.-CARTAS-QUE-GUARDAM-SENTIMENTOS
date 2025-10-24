@@ -53,6 +53,8 @@ app.get('/feed', (req, res) => {
     res.render('pages/feed', { username: req.session.username }); 
 });
 
+module.exports = app;
+
 if(require.main === module){
     app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
