@@ -16,6 +16,6 @@ router.get("/login", authController.getLoginPage);
 router.post("/login", authController.loginUser);
 
 //Rota de quando usuário quer sair da conta
-router.post("logout", authController.logoutUser);
+router.post("/logout", authController.logoutUser);
 
 module.exports = router;

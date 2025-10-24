@@ -12,8 +12,9 @@ exports.getRegisterPage = (req, res) => {
 };
 
 exports.registerUser = async (req, res) => {
-    const { username, email, password, confirm_password } = req.body;
-    
+    // Proteção caso req.body seja undefined
+    const { username, email, password, confirm_password } = req.body || {};
+
     if (!username || !email || !password || !confirm_password) {
         return res.render('pages/register', { error: 'Por favor, preencha todos os campos.' });
     }
@@ -29,11 +30,19 @@ exports.registerUser = async (req, res) => {
         }
         
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-        await userModel.createUser(username, email, passwordHash);
-        
-        // Cadastro bem-sucedido
-        // O desvio de fluxo para /login com redirect está perfeito aqui.
-        return res.redirect('/login'); 
+        const createdUser = await userModel.createUser(username, email, passwordHash);
+
+        // Configura a sessão automaticamente após cadastro e salva antes do redirect
+        req.session.userId = createdUser.user_id || createdUser.id;
+        req.session.username = username;
+
+        req.session.save(err => {
+            if (err) {
+                console.error('Erro ao salvar sessão após registro:', err);
+                return res.render('pages/register', { error: 'Erro interno ao criar sessão.' });
+            }
+            return res.redirect('/feed');
+        });
 
     } catch (error) {
         console.error('--- ERRO FATAL NO CADASTRO ---');
@@ -56,14 +65,14 @@ exports.getLoginPage = (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
+
+    if (!email || !password) {
+        return res.render('pages/login', { error: 'E-mail e senha são obrigatórios.' });
+    }
 
     try {
         const user = await userModel.findUserByEmail(email); 
-
-        if (!user) {
-            return res.render('pages/login', { error: 'E-mail ou senha inválidos.' });
-        }
         
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
 
