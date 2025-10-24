@@ -1,13 +1,13 @@
-// authController.js
-
 const userModel = require('../models/userModel.js');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10; 
 
 exports.getRegisterPage = (req, res) => {
     if (req.session.userId) {
+        // Se já logado, redireciona para o feed
         return res.redirect('/feed'); 
     }
+    // Assumindo que a view de registro está em 'views/pages/register.ejs'
     res.render('pages/register', { error: null }); 
 };
 
@@ -32,13 +32,13 @@ exports.registerUser = async (req, res) => {
         await userModel.createUser(username, email, passwordHash);
         
         // Cadastro bem-sucedido
+        // O desvio de fluxo para /login com redirect está perfeito aqui.
         return res.redirect('/login'); 
 
     } catch (error) {
         console.error('--- ERRO FATAL NO CADASTRO ---');
         console.error(error);
         
-        // Verifica se o erro é de duplicidade de e-mail (se não pego antes)
         if (error.code === 'ER_DUP_ENTRY') {
             return res.render('pages/register', { error: 'E-mail já cadastrado.' });
         }
@@ -51,6 +51,7 @@ exports.getLoginPage = (req, res) => {
     if (req.session.userId) {
         return res.redirect('/feed'); 
     }
+    // Assumindo que a view de login está em 'views/pages/login.ejs'
     res.render('pages/login', { error: null }); 
 };
 
@@ -64,26 +65,27 @@ exports.loginUser = async (req, res) => {
             return res.render('pages/login', { error: 'E-mail ou senha inválidos.' });
         }
         
-        // A chave 'passwordHash' deve existir graças ao userModel.js
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
 
         if (isPasswordValid) {
             if (user.is_banned) {
+                // CORREÇÃO DE RENDER: Se a conta estiver banida, o usuário deve ser redirecionado para a página de login
                 return res.render('pages/login', { error: 'Sua conta está banida.' });
             }
             
-            // CRIAÇÃO DA SESSÃO
-            req.session.userId = user.id; 
+            //Configura a sessão
+            req.session.userId = user.user_id; // Use user_id conforme seu modelo
             req.session.username = user.username;
             
-            // GARANTINDO O REDIRECIONAMENTO COM A SESSÃO SALVA
+            //Salva a sessão e executa o redirecionamento DENTRO da função corretamente, de uma forma que não fique recarregando infinitamente esperando retorno.
             req.session.save(err => {
                 if (err) {
                     console.error('Erro ao salvar sessão:', err);
                     return res.render('pages/login', { error: 'Erro de sessão interna.' });
                 }
                 
-                return res.redirect('/feed'); 
+                // Se o save for bem-sucedido, redirecionamos para /feed
+                return res.redirect('/feed');  
             });
 
         } else {

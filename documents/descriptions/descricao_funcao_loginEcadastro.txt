@@ -1,0 +1,20 @@
+O processo utiliza padrão MVC, quando o usuário manda requisições, elas passam por alguma lógica no controller usando funções do model para se aplicar uma função com algum método CRUD no banco de dados, devolvendo a resposta por rotas comnfiguradas nos routes e juntando tudo isso no server.js (aplicação)
+
+*Descrição -> Base lógica e superficial da arquitetura dessa função
+
+O primeiro passo na criação de uma rede social é conectar um usuário com sua própria conta nela.
+Para isso três rotas do projeto vão conversar entre si: A rota /register (que é o cadastro), a rota /login e a rota /feed (a página inicial dessa rede social temática).
+
+Essas rotas tem páginas .ejs, que são arquivos construídos para caber JSON e para ser usado as funções render() e redirect(), render() para a construção das páginas com HTML e arquivos estáticos CSS/JS e redirect() para devolver desvio de fluxo à uma requisição do usuário, que nesse caso, é após o usuário cadastrar e após o usuário logar.
+
+No server.js está configurado como será usado arquivos estáticos e templates view com .ejs para devolver páginas pelo acesso de rotas e para devolver os arquivos estáticos de estilização e comportamento com JavaScript. Além das próprias configurações de fluxo.
+
+Essas configurações de fluxo ajudam em algumas coisas, se o usuário tentar acessar a rota de feed sem estar logado não vai funcionar, e se ele estiver logado, no feed da Rede social, não terá como ele simplesmente voltar para a página de login aleatóriamente sem deslogar ou usar outra conta.
+
+E não terá como acessar o feed se não estiver logado.
+
+*Descrição -> Como funciona o login nesse site?
+
+Basicamente tudo começa na rota /register, onde o usuário coloca seu nome, email e senha, que são cadastrados diretamente no banco de dados e ficam lá, com a senha "criptografada" com hash para não poder ver ela no banco de dados explicitamente, tudo isso na função registerUser() no arquivo authController.js. Isso também inclui verificações para ver se o usuário já existe no banco de dados, e se a confirmação de senha bate.
+
+Depois do cadastro, ele é redirecionado para a rota /login, com a página de login, onde ele coloca suas informações já no banco de dados e através da função loginUser(), ele busca as informações do banco de dados e faz o usuário ir para o feed da rede social, com verificações básicas de existência de usuário e se as informações estão corretas.

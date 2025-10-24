@@ -12,17 +12,21 @@ app.set('view engine', 'ejs');
 const VIEWS_ROOT = path.join(__dirname, 'views')
 app.set('views', VIEWS_ROOT);
 
-//Middlewares
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-//Configuração de sessão para login
+// Configuração de sessão para login
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'chave-secreta-default',
+    secret: process.env.SESSION_SECRET || 'chave-secreta-default', 
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
+    name: 'user_sid', 
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 semana com cookies
+    }
 }));
 
 
@@ -41,9 +45,11 @@ app.get('/feed', (req, res) => {
     console.log('ID do Usuário na Sessão:', req.session.userId); 
     
     if (!req.session.userId) {
+        // Redireciona se não estiver autenticado
         return res.redirect('/login');
     }
-    // A rota /feed deve renderizar a página do feed
+    
+    //pages/feed correto, não mude esse redirecionamento!
     res.render('pages/feed', { username: req.session.username }); 
 });
 

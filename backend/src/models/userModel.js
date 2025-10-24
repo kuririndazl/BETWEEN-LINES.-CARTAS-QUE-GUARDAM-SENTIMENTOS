@@ -21,7 +21,4 @@ async function findUserByEmail(email) {
     return null; 
 }
 
-module.exports = {
-    createUser,
-    findUserByEmail,
-};
+module.exports = { createUser,findUserByEmail };

@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login de usuário</title>
+    <link rel="stylesheet" href="/public/styles/reset.css">
+    <link rel="stylesheet" href="/public/styles/register.css">
+</head>
+
 <body>
     <h1 id="title">Cadastro - Novo usuário</h1>
     <main>
-        <% if (typeof error !== 'undefined' && error) { %>
-            <p style="color: red; font-weight: bold;"><%= error %></p>
-        <% } %>
+        <% if (typeof error !=='undefined' && error) { %>
+            <p style="color: red; font-weight: bold;">
+                <%= error %>
+            </p>
+            <% } %>
 
-        <form action="/register" method="POST">
-            
-            <label for="username">Nome de Usuário:</label>
-            <input type="text" id="username" name="username" required><br><br>
+                <form action="/register" method="POST">
 
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required><br><br>
+                    <label for="username">Nome de Usuário:</label>
+                    <input type="text" id="username" name="username" required><br><br>
 
-            <label for="password">Senha:</label>
-            <input type="password" id="password" name="password" required><br><br>
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required><br><br>
 
-            <label for="confirm_password">Confirmar Senha:</label>
-            <input type="password" id="confirm_password" name="confirm_password" required><br><br> 
-            
-            <div id="container_buttons">
-                <button type="submit">Cadastrar</button>
-                <a href="/login" class="btn-redirect">Já tenho conta</a> 
-            </div>
-        </form>
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" required><br><br>
+
+                    <label for="confirm_password">Confirmar Senha:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required><br><br>
+
+                    <div id="container_buttons">
+                        <button type="submit">Cadastrar</button>
+                        <a href="/login" class="btn-redirect">Já tenho conta</a>
+                    </div>
+                </form>
     </main>
 </body>
+
 </html>
