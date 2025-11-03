@@ -4,13 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login de usuário</title>
+    <title>Cadastro de usuário</title>
     <link rel="stylesheet" href="/public/styles/reset.css">
     <link rel="stylesheet" href="/public/styles/register.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Waterfall&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <h1 id="title">Cadastro - Novo usuário</h1>
     <main>
         <% if (typeof error !=='undefined' && error) { %>
             <p style="color: red; font-weight: bold;">
@@ -19,22 +22,23 @@
             <% } %>
 
                 <form action="/register" method="POST">
+                    <h1 id="title">Cadastro - Novo usuário</h1>
+                    <label for="username"><strong>Nome de Usuário:</strong></label>
+                    <input type="text" id="username" name="username" placeholder="Inserir nome" required><br><br>
 
-                    <label for="username">Nome de Usuário:</label>
-                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="email"><strong>E-mail:</strong></label>
+                    <input type="email" id="email" name="email" placeholder="Inserir email" required><br><br>
 
-                    <label for="email">E-mail:</label>
-                    <input type="email" id="email" name="email" required><br><br>
+                    <label for="password"><strong>Senha:</strong></label>
+                    <input type="password" id="password" name="password" placeholder="Criar senha" required><br><br>
 
-                    <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" required><br><br>
-
-                    <label for="confirm_password">Confirmar Senha:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required><br><br>
+                    <label for="confirm_password"><strong>Confirmar Senha:</strong></label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar senha"
+                        required><br><br>
 
                     <div id="container_buttons">
-                        <button type="submit">Cadastrar</button>
-                        <a href="/login" class="btn-redirect">Já tenho conta</a>
+                        <button id="btn_cadastro" type="submit">Cadastrar</button>
+                        <a href="/login" id="btn_conta" class="btn-redirect">Já tenho conta</a>
                     </div>
                 </form>
     </main>
