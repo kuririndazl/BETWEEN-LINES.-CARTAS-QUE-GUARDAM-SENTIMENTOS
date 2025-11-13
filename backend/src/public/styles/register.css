@@ -1,5 +1,7 @@
 body{
     background-image: URL('/public/img/backgroundQperigo_cadastro.png');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 h1#title{
@@ -19,9 +21,8 @@ main{
 }
 
 form{
-    margin: auto;
+    margin: 200px auto;
     width:400px;
-    margin-top:10px;
     background-color: rgb(222, 214, 203);
     padding:10px;
     border-radius:5px;
