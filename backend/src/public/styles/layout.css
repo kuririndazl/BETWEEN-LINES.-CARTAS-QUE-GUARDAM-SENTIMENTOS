@@ -1,0 +1,179 @@
+/* --- 1. RESET BÁSICO --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- 2. TIPOGRAFIA E CORPO --- */
+body {
+    background-color: #FAFAFA; /* Cor de fundo leve como em redes sociais */
+    color: #262626; /* Texto escuro para contraste */
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Links globais */
+a {
+    text-decoration: none;
+    color: #00376B; /* Azul institucional */
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #0073B4;
+}
+
+/* --- 3. HEADER (Navbar Fixo) --- */
+header {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #DBDBDB;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 935px; /* Largura padrão de feed */
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo a {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #5d5d81; /* Cor da sua marca anterior */
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a, nav button {
+    color: #262626;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.profile-link img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    transition: transform 0.2s;
+}
+
+.profile-link:hover img {
+    transform: scale(1.05);
+}
+
+.profile-link i {
+    font-size: 24px;
+    color: #262626;
+}
+
+/* --- 4. CONTEÚDO PRINCIPAL --- */
+.main-content {
+    flex-grow: 1;
+    max-width: 935px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* --- 5. FOOTER --- */
+footer {
+    background-color: #FFFFFF;
+    color: #AAAAAA;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto;
+    font-size: 12px;
+    border-top: 1px solid #DBDBDB;
+}
+
+/* --- 6. FORMULÁRIOS E UI --- */
+.card {
+    background-color: #FFFFFF;
+    border: 1px solid #DBDBDB;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #262626;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #DBDBDB;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background-color: #5d5d81;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #4a4a6b;
+}
+
+/* Mensagens de Notificação */
+.message-box {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.success-message {
+    background-color: #E6F7F0; /* Verde claro */
+    color: #1A7A4C; /* Verde escuro */
+    border: 1px solid #B7E4C7;
+}
+
+.error-message {
+    background-color: #FEEEEE; /* Vermelho claro */
+    color: #D9304E; /* Vermelho escuro */
+    border: 1px solid #FBC4C4;
+}

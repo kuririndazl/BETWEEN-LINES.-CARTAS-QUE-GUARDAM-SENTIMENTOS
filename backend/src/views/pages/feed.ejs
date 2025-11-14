@@ -1,11 +1,111 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seu feed</title>
+    <title>Feed</title>
+    <%- include('../partials/head.ejs') %>
 </head>
+
 <body>
-    
+    <%- include('../partials/header.ejs') %>
+
+        <main class="main-content">
+            <div class="feed-layout">
+                <!-- COLUNA PRINCIPAL: FEED DE POSTS -->
+                <section class="feed-posts">
+                    <!-- Cartão de Post Mock 1 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <img src="/public/images/default_avatar.png" alt="Usuário Exemplo">
+                            <span>viajante_do_tempo</span>
+                        </div>
+                        <div class="post-content">
+                            <!-- Placeholder visual para a carta -->
+                            <i class="fas fa-scroll" style="font-size: 80px; color: #DBDBDB;"></i>
+                        </div>
+                        <div class="post-actions">
+                            <button><i class="far fa-heart"></i></button>
+                            <button><i class="far fa-comment"></i></button>
+                            <button><i class="far fa-paper-plane"></i></button>
+                        </div>
+                        <div class="post-caption">
+                            <strong>viajante_do_tempo</strong> Recebi hoje uma carta que escrevi para mim mesmo há 5
+                            anos. É como ter um diálogo com meu "eu" do passado. A lentidão da comunicação realmente tem
+                            seu charme.
+                        </div>
+                    </div>
+
+                    <!-- Cartão de Post Mock 2 (Usando dados do usuário logado) -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <img src="<%= user.profilePictureUrl %>" alt="<%= user.username %>">
+                            <span>
+                                <%= user.username %>
+                            </span>
+                        </div>
+                        <div class="post-content">
+                            <!-- Outro Placeholder -->
+                            <i class="fas fa-envelope-open-text" style="font-size: 80px; color: #DBDBDB;"></i>
+                        </div>
+                        <div class="post-actions">
+                            <button><i class="fas fa-heart" style="color: #D9304E;"></i></button>
+                            <button><i class="far fa-comment"></i></button>
+                            <button><i class="far fa-paper-plane"></i></button>
+                        </div>
+                        <div class="post-caption">
+                            <strong>
+                                <%= user.username %>
+                            </strong> A ansiedade de escrever e a paciência de esperar. Este é o nosso lema! #Entrelinhas
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUNA LATERAL: SUGESTÕES E AÇÕES RÁPIDAS -->
+                <aside class="sidebar">
+                    <!-- Seu Mini-Perfil Rápido -->
+                    <div class="user-suggestion-card" style="margin-bottom: 30px;">
+                        <img src="<%= user.profilePictureUrl %>" alt="Seu Perfil">
+                        <div class="user-info">
+                            <a href="/profile" class="username">
+                                <%= user.username %>
+                            </a>
+                            <div class="subtitle">Meu Perfil</div>
+                        </div>
+                    </div>
+
+                    <!-- Sugestões de Pessoas -->
+                    <div class="subtitle" style="font-weight: 600; color: #8E8E8E; margin-bottom: 15px;">Sugestões para
+                        Você</div>
+
+                    <div class="user-suggestion-card">
+                        <img src="/public/images/default_avatar.png" alt="Caneta Dourada">
+                        <div class="user-info">
+                            <div class="username">caneta_dourada</div>
+                            <div class="subtitle">Escritor</div>
+                        </div>
+                        <a href="#" style="font-size: 12px; font-weight: 600;">Seguir</a>
+                    </div>
+
+                    <div class="user-suggestion-card">
+                        <img src="/public/images/default_avatar.png" alt="Selos Antigos">
+                        <div class="user-info">
+                            <div class="username">colecionador_selos</div>
+                            <div class="subtitle">Colecionador</div>
+                        </div>
+                        <a href="#" style="font-size: 12px; font-weight: 600;">Seguir</a>
+                    </div>
+
+                    <a href="#" class="write-letter-btn">
+                        <i class="fas fa-feather-alt"></i> Escrever Nova Carta
+                    </a>
+                </aside>
+            </div>
+        </main>
+
+        <%- include('../partials/footer.ejs') %>
+
+
 </body>
+
 </html>

@@ -1,0 +1,36 @@
+.header-main{
+    background-image: linear-gradient(90deg, rgb(36, 18, 5),rgb(70, 36, 14),rgb(105, 56, 24));
+    padding:10px;
+}
+
+.logo a{
+    padding:10px;
+    color:white;
+}
+
+div.header-content{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-nav{
+    padding:10px;
+}
+
+#user-menu{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type:none;
+}
+
+#user-menu li{
+    margin-right:10px;
+}
+
+#user-menu li a{
+     color: white;
+}

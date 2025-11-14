@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/styles/header.css">
+</head>
+<body>
+    <header class="header-main">
+        <div class="header-content">
+            <div class="logo">
+                <a href="/feed">Entre Letras</a>
+            </div>
+
+            <!-- Links Principais -->
+            <nav class="nav-links">
+                <a href="/feed" title="Feed"><i class="fas fa-home"></i></a>
+                <a href="/escrever" title="Escrever Carta"><i class="fas fa-feather-alt"></i></a>
+            </nav>
+
+            <!-- Informações do Usuário (Sempre disponível devido ao middleware) -->
+            <div class="user-info-header">
+                <% if (user) { %>
+                    <a href="/profile" class="profile-link" title="Meu Perfil">
+                        <img src="<%= user.profilePictureUrl %>" alt="<%= user.username %>" class="profile-pic">
+                    </a>
+
+                    <div class="section-nav">
+                        <ul id="user-menu">
+                            <li><a href="/profile"><i class="fas fa-user-circle"></i>Perfil</a></li>
+                            <li><a href="/edit-profile"><i class="fas fa-cog"></i>Configurações</a></li>
+                            <li class="separator"></li>
+                            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i>Sair</a></li>
+                        </ul>
+                    </div>
+                    <% } else { %>
+                        <a href="/login" class="btn-login">Entrar</a>
+                        <% } %>
+            </div>
+        </div>
+    </header>
+</body>
+
+</html>

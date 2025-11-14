@@ -15,7 +15,8 @@ app.set('views', VIEWS_ROOT);
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+// Adiciona a pasta 'uploads' aos arquivos estáticos para que as fotos de perfil funcionem
+app.use('/public', express.static(path.join(__dirname, 'public'))); 
 
 // Configuração de sessão para login
 app.use(session({
@@ -30,8 +31,14 @@ app.use(session({
 }));
 
 
+const authController = require('./controllers/authController.js');
+const userRoutes = require('./routers/userRoutes.js');
+// IMPORTANTE: Adiciona o middleware para carregar os dados do usuário (foto, nome) em res.locals.user
+app.use(authController.injectUserData); 
+
 const authRoutes = require('./routers/authRoutes.js');
 app.use('/', authRoutes);
+app.use('/', userRoutes);
 
 app.get('/', (req, res) => {
     if (req.session.userId) {
@@ -39,18 +46,6 @@ app.get('/', (req, res) => {
     } else {
         res.redirect('/login');
     }
-});
-
-app.get('/feed', (req, res) => {
-    console.log('ID do Usuário na Sessão:', req.session.userId); 
-    
-    if (!req.session.userId) {
-        // Redireciona se não estiver autenticado
-        return res.redirect('/login');
-    }
-    
-    //pages/feed correto, não mude esse redirecionamento!
-    res.render('pages/feed', { username: req.session.username }); 
 });
 
 module.exports = app;

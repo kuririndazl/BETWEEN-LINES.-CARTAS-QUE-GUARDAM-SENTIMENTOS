@@ -1,0 +1,145 @@
+.feed-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Conteúdo maior que a barra lateral */
+    gap: 50px;
+    background-color: rgb(43, 40, 36);
+    padding:15px;
+    margin-top: 0;
+    border-radius: 10px;
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.368);
+}
+
+/*coluna*/
+.feed-posts {
+    min-height: 500px;
+}
+
+.post-card{
+    border: 1px solid #DBDBDB;
+    background-color: #fff;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.post-header img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+}
+
+.post-header span {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.post-content {
+    /* Simula a área da carta ou imagem do post */
+    background-color: #f7f7f7;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    color: #aaa;
+    border-bottom: 1px solid #eee;
+}
+
+.post-actions {
+    padding: 10px 15px;
+    display: flex;
+    gap: 15px;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #262626;
+    transition: color 0.1s;
+}
+
+.post-actions button:hover {
+    color: #8E8E8E;
+}
+
+.post-caption {
+    padding: 0 15px 10px 15px;
+    font-size: 14px;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-top: 20px;
+    position: sticky; /* Fixo enquanto o feed rola */
+    top: 60px; /* Abaixo do header */
+    height: fit-content;
+}
+
+.user-suggestion-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-suggestion-card img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    border: 1px solid #ccc;
+}
+
+.user-info {
+    flex-grow: 1;
+}
+
+.user-info .username {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.user-info .subtitle {
+    font-size: 12px;
+    color: #8E8E8E;
+}
+
+.write-letter-btn {
+    display: block;
+    margin-top: 30px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    background-color: #5d5d81;
+    color: white;
+}
+.write-letter-btn:hover {
+    background-color: #4a4a6b;
+}
+
+/* Responsividade (Para dispositivos móveis, a sidebar vai para baixo) */
+@media (max-width: 768px) {
+    .feed-layout {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .sidebar {
+        display: none; /* Oculta a sidebar em telas pequenas, foco no feed */
+    }
+}
