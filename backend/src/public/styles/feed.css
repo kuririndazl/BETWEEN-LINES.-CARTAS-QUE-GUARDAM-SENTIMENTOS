@@ -1,3 +1,12 @@
+body{
+    width:100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-image: URL("/public/img/background_feed.jpeg");
+    background-color: #321F14;
+}
+
 .feed-layout {
     display: grid;
     grid-template-columns: 2fr 1fr; /* Conteúdo maior que a barra lateral */
@@ -15,7 +24,7 @@
 }
 
 .post-card{
-    border: 1px solid #DBDBDB;
+    border: 1px solid #dbdbdb;
     background-color: #fff;
     border-radius: 3px;
     margin-bottom: 20px;
@@ -52,6 +61,11 @@
     font-style: italic;
     color: #aaa;
     border-bottom: 1px solid #eee;
+}
+
+.post-content #img_content{
+    height:400px;
+    width:541px;
 }
 
 .post-actions {
@@ -131,6 +145,10 @@
 .write-letter-btn:hover {
     background-color: #a97925;
     color: whitesmoke;
+}
+
+.follow{
+    color: #f7f7f7;
 }
 
 /* Responsividade (Para dispositivos móveis, a sidebar vai para baixo) */

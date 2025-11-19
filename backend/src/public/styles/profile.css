@@ -1,4 +1,7 @@
-/* --- PROFILE HEADER --- */
+main.main-content-profile{
+    background-color: whitesmoke;
+}
+
 .profile-header {
     display: flex;
     padding: 40px 0;
