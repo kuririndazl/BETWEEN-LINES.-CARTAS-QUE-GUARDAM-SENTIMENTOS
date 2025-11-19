@@ -78,7 +78,6 @@
     font-size: 14px;
 }
 
-/* --- SIDEBAR --- */
 .sidebar {
     display:flex;
     justify-content: center;
@@ -111,6 +110,7 @@
 .user-info .username {
     font-weight: 600;
     font-size: 14px;
+    color:rgb(187, 143, 21);
 }
 
 .user-info .subtitle {
@@ -125,11 +125,12 @@
     padding: 10px;
     border-radius: 4px;
     font-weight: 600;
-    background-color: #5d5d81;
+    background-color: #cb9332;
     color: white;
 }
 .write-letter-btn:hover {
-    background-color: #4a4a6b;
+    background-color: #a97925;
+    color: whitesmoke;
 }
 
 /* Responsividade (Para dispositivos móveis, a sidebar vai para baixo) */

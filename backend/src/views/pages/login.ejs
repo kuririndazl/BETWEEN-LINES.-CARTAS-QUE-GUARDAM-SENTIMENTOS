@@ -10,21 +10,36 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Waterfall&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/public/img/favicons_rede-social.png" type="image/x-icon">
 </head>
 
 <body>
     <main>
         <form id="login" action="/login" method="POST">
+            <div id="logo_container">
+                <picture>
+                    <img src="/public/img/logo_beetween_letter.png" alt="">
+                </picture>
+            </div>
             <h1 id="title">Login - Bem-vindo(a) de novo!</h1>
-            <label for="email"><strong>E-mail:</strong></label>
-            <input type="email" id="email" name="email" placeholder="Inserir E-mail"><br><br>
+            <div id="container_inputs">
 
-            <label for="password"><strong>Senha:</strong></label>
-            <input type="password" id="password" name="password" placeholder="Inserir Senha"><br><br>
-            <a id="esq_senha" href="#">Esqueci a minha senha</a>
+                <div>
+                    <label for="email"><strong>E-mail:</strong></label>
+                    <input type="email" id="email" name="email" placeholder="Inserir E-mail"><br><br>
+                </div>
+
+                <div>
+                    <label for="password"><strong>Senha:</strong></label>
+                    <input type="password" id="password" name="password" placeholder="Inserir Senha"><br><br>
+                    <a id="esq_senha" href="#">Esqueci a minha senha</a>
+                </div>
+            </div>
 
             <div id="container_buttons">
+                <hr>
                 <button id="btn_login" type="submit">Entrar</button>
+                <p id="ou_p">ou</p>
                 <a href="/register" id="btn-cadastro"><strong>Fazer cadastro</strong></a>
             </div>
         </form>

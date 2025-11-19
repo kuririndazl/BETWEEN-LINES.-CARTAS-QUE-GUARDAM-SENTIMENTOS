@@ -1,5 +1,5 @@
 .header-main{
-    background-image: linear-gradient(90deg, rgb(36, 18, 5),rgb(70, 36, 14),rgb(105, 56, 24));
+    background-image: linear-gradient(90deg, #C29C79, #a78463 , #8d6b4c);
     padding:10px;
 }
 
@@ -33,4 +33,16 @@ div.header-content{
 
 #user-menu li a{
      color: white;
+}
+
+.user-info-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.logo img{
+    width:50px;
+    cursor: pointer;
 }
