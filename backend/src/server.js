@@ -33,12 +33,14 @@ app.use(session({
 
 const authController = require('./controllers/authController.js');
 const userRoutes = require('./routers/userRoutes.js');
+const postRoutes = require('./routers/postRoutes.js'); // NOVO: Importa rotas de posts
 // IMPORTANTE: Adiciona o middleware para carregar os dados do usuário (foto, nome) em res.locals.user
 app.use(authController.injectUserData); 
 
 const authRoutes = require('./routers/authRoutes.js');
 app.use('/', authRoutes);
 app.use('/', userRoutes);
+app.use('/', postRoutes); // NOVO: Adiciona rotas de post
 
 app.get('/', (req, res) => {
     if (req.session.userId) {

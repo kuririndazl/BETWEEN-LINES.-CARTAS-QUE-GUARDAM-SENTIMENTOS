@@ -1,4 +1,36 @@
-const { pool } = require('./connection');
+const { pool } = require('./connection.js');
+// src/controllers/userController.js
+
+const userModel = require('../models/userModel.js');
+const postModel = require('../models/postModel.js'); // NOVO: Importa o model de posts
+const path = require('path');
+const fs = require('fs'); 
+
+exports.getProfilePage = async (req, res) => {
+    const user = res.locals.user;
+    
+    try {
+        // NOVO: Conta o número real de posts (cartas públicas)
+        const postCount = await postModel.countPostsByUserId(user.user_id); 
+    
+        // Dados de estatísticas mockados para o EJS (apenas lettersSent/Received)
+        const stats = {
+            lettersSent: 42, // Mantenha como mock ou implemente a contagem de Direct_Letters
+            lettersReceived: 18, // Mantenha como mock ou implemente a contagem de Direct_Letters
+            postCount: postCount, // Adiciona a contagem real de posts
+        };
+
+        res.render('pages/profile', { profile: user, stats: stats });
+
+    } catch (error) {
+        console.error('Erro ao buscar dados do perfil:', error);
+        // Em caso de erro, renderiza com zero posts, mas exibe o perfil
+        const stats = { lettersSent: 0, lettersReceived: 0, postCount: 0 };
+        res.render('pages/profile', { profile: user, stats: stats });
+    }
+};
+
+// ... (Resto do código do userController.js permanece o mesmo)
 
 /**
  * Converte o resultado do banco de dados para um objeto User limpo.
@@ -73,10 +105,32 @@ async function updateProfilePicture(userId, profilePictureUrl) {
 }
 
 
+async function countSentDirectLetters(userId) {
+    const [rows] = await pool.query(
+        'SELECT COUNT(*) as sentCount FROM Direct_Letters WHERE sender_id = ?',
+        [userId]
+    );
+    // Retorna 0 se o array de rows estiver vazio ou a contagem não estiver definida
+    return rows[0] ? rows[0].sentCount : 0;
+}
+
+/**
+ * Conta o número de cartas diretas recebidas por um usuário.
+ */
+async function countReceivedDirectLetters(userId) {
+    const [rows] = await pool.query(
+        'SELECT COUNT(*) as receivedCount FROM Direct_Letters WHERE receiver_id = ?',
+        [userId]
+    );
+    return rows[0] ? rows[0].receivedCount : 0;
+}
+
 module.exports = {
     createUser, 
     findUserByEmail,
-    findUserById, // Novo
-    updateUserProfile, // Novo
-    updateProfilePicture // Novo
+    findUserById,
+    updateUserProfile,
+    updateProfilePicture,
+    countSentDirectLetters, 
+    countReceivedDirectLetters,
 }

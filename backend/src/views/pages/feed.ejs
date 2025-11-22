@@ -12,60 +12,54 @@
 
         <main class="main-content">
             <div class="feed-layout">
-                <!-- COLUNA PRINCIPAL: FEED DE POSTS -->
                 <section class="feed-posts">
-                    <!-- Cartão de Post Mock 1 -->
-                    <div class="post-card">
-                        <div class="post-header">
-                            <img src="/public/img/viajante_tempo_icon.jpeg" alt="Usuário Exemplo">
-                            <span>viajante_do_tempo</span>
-                        </div>
-                        <div class="post-content">
-                            <!-- Placeholder visual para a carta -->
-                             <img id="img_content" src="/public/img/fotoCarta_content.jpeg" alt="content">
-                            <i class="fas fa-scroll" style="font-size: 80px; color: #DBDBDB;"></i>
-                        </div>
-                        <div class="post-actions">
-                            <button><i class="far fa-heart"></i></button>
-                            <button><i class="far fa-comment"></i></button>
-                            <button><i class="far fa-paper-plane"></i></button>
-                        </div>
-                        <div class="post-caption">
-                            <strong>viajante_do_tempo</strong> Recebi hoje uma carta que escrevi para mim mesmo há 5
-                            anos. É como ter um diálogo com meu "eu" do passado. A lentidão da comunicação realmente tem
-                            seu charme.
-                        </div>
-                    </div>
 
-                    <!-- Cartão de Post Mock 2 (Usando dados do usuário logado) -->
-                    <div class="post-card">
-                        <div class="post-header">
-                            <img src="<%= user.profilePictureUrl %>" alt="<%= user.username %>">
-                            <span>
-                                <%= user.username %>
-                            </span>
-                        </div>
-                        <div class="post-content">
-                            <!-- Outro Placeholder -->
-                             <img id="img_content" src="public/img/schopenhauer_content_letter.jpeg" alt="content">
-                            <i class="fas fa-envelope-open-text" style="font-size: 80px; color: #DBDBDB;"></i>
-                        </div>
-                        <div class="post-actions">
-                            <button><i class="fas fa-heart" style="color: #D9304E;"></i></button>
-                            <button><i class="far fa-comment"></i></button>
-                            <button><i class="far fa-paper-plane"></i></button>
-                        </div>
-                        <div class="post-caption">
-                            <strong>
-                                <%= user.username %>
-                            </strong> A ansiedade de escrever e a paciência de esperar. Este é o nosso lema! #Entrelinhas
-                        </div>
-                    </div>
-                </section>
+                    <% if (message) { %>
+                        <div class="message-box success-message" style="margin-bottom: 20px;"><%= message %></div>
+                    <% } %>
 
-                <!-- COLUNA LATERAL: SUGESTÕES E AÇÕES RÁPIDAS -->
+                    <% if (posts.length === 0) { %>
+                        <div class="post-card" style="text-align: center; padding: 40px; color: #8E8E8E;">
+                            <i class="fas fa-inbox" style="font-size: 50px; margin-bottom: 15px;"></i>
+                            <p>Nenhuma carta pública ainda. Seja o primeiro a escrever!</p>
+                        </div>
+                    <% } %>
+                    
+                    <% posts.forEach(function(post) { %>
+                        <div class="post-card">
+                            <div class="post-header">
+                                <img src="<%= post.profilePictureUrl || '/public/images/default_avatar.png' %>" alt="<%= post.username %>">
+                                <span><%= post.username %></span>
+                            </div>
+                            <div class="post-content">
+                                <% if (post.imageUrl) { %>
+                                    <img class="post-image" src="<%= post.imageUrl %>" alt="Imagem da carta">
+                                <% } else { %>
+                                    <i class="fas fa-feather-alt" style="font-size: 80px; color: #DBDBDB;"></i>
+                                <% } %>
+                            </div>
+                            <div class="post-actions">
+                                <button><i class="far fa-heart"></i></button>
+                                <button><i class="far fa-comment"></i></button>
+                                <button><i class="far fa-paper-plane"></i></button>
+                            </div>
+                            <div class="post-caption">
+                                <strong><%= post.username %></strong> 
+                                
+                                <% if (post.title) { %>
+                                    <p style="font-weight: 600; margin-top: 5px;">*<%= post.title %>*</p>
+                                <% } %>
+                                
+                                <pre style="white-space: pre-wrap; font-family: inherit;"><%= post.content %></pre> 
+                                
+                                <small style="color: #8E8E8E; display: block; margin-top: 10px;">Enviado em <%= new Date(post.creationDate).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' }) %></small>
+                            </div>
+                        </div>
+                    <% }); %>
+                    
+                    </section>
+
                 <aside class="sidebar">
-                    <!-- Seu Mini-Perfil Rápido -->
                     <div class="user-suggestion-card" style="margin-bottom: 30px;">
                         <img src="<%= user.profilePictureUrl %>" alt="Seu Perfil">
                         <div class="user-info">
@@ -76,9 +70,7 @@
                         </div>
                     </div>
 
-                    <!-- Sugestões de Pessoas -->
-                    <div class="subtitle" style="font-weight: 600; color: #8E8E8E; margin-bottom: 15px;">Sugestões para
-                        Você</div>
+                    <div class="subtitle" style="font-weight: 600; color: #8E8E8E; margin-bottom: 15px;">Sugestões para Você</div>
 
                     <div class="user-suggestion-card">
                         <img src="/public/img/escritor_icon.jpeg" alt="Manin_macabro">
@@ -98,7 +90,7 @@
                         <a href="#" class="follow"  style="font-size: 12px; font-weight: 600;">Seguir</a>
                     </div>
 
-                    <a href="#" class="write-letter-btn">
+                    <a href="/new-letter" class="write-letter-btn">
                         <i class="fas fa-feather-alt"></i> Escrever Nova Carta
                     </a>
                 </aside>
@@ -106,8 +98,5 @@
         </main>
 
         <%- include('../partials/footer.ejs') %>
-
-
 </body>
-
 </html>

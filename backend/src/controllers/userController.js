@@ -1,19 +1,87 @@
 const userModel = require('../models/userModel');
+const postModel = require('../models/postModel'); 
 const path = require('path');
-const fs = require('fs'); // Para deletar a imagem antiga
+const fs = require('fs'); 
 
 exports.getProfilePage = async (req, res) => {
     // Autenticação já garantida pelo middleware, dados do usuário já em res.locals.user
     const user = res.locals.user;
     
-    // Dados de estatísticas mockados para o EJS
-    const stats = {
-        lettersSent: 42,
-        lettersReceived: 18,
-    };
+    try {
+        const userId = user.user_id;
 
-    // A página de perfil precisa dos dados do próprio usuário.
-    res.render('pages/profile', { profile: user, stats: stats });
+        // NOVO: Faz a chamada simultânea para buscar todos os dados reais
+        const [postCount, lettersSent, lettersReceived] = await Promise.all([
+            // 1. Posts (Cartas Públicas)
+            postModel.countPostsByUserId(userId),
+            // 2. Cartas Diretas Enviadas
+            userModel.countSentDirectLetters(userId),
+            // 3. Cartas Diretas Recebidas
+            userModel.countReceivedDirectLetters(userId),
+        ]);
+        
+        // Dados de estatísticas com valores reais
+        const stats = {
+            postCount: postCount,           // Contagem real da tabela Posts
+            lettersSent: lettersSent,       // Contagem real da tabela Direct_Letters (sender_id)
+            lettersReceived: lettersReceived, // Contagem real da tabela Direct_Letters (receiver_id)
+        };
+
+        // A página de perfil precisa dos dados do próprio usuário.
+        res.render('pages/profile', { profile: user, stats: stats });
+        
+    } catch (error) {
+        console.error('Erro ao buscar dados do perfil:', error);
+        
+        // Em caso de erro, renderiza com zero posts, mas exibe o perfil
+        const stats = { postCount: 0, lettersSent: 0, lettersReceived: 0 };
+        res.render('pages/profile', { profile: user, stats: stats, error: 'Erro ao carregar estatísticas.' });
+    }
+};
+
+exports.getProfilePage = async (req, res) => {
+    const user = res.locals.user;
+    
+    try {
+        const userId = user.user_id;
+
+        // NOVO: Adiciona a busca dos posts no Promise.all
+        const [postCount, lettersSent, lettersReceived, userPosts] = await Promise.all([
+            // 1. Posts (Cartas Públicas)
+            postModel.countPostsByUserId(userId),
+            // 2. Cartas Diretas Enviadas
+            userModel.countSentDirectLetters(userId),
+            // 3. Cartas Diretas Recebidas
+            userModel.countReceivedDirectLetters(userId),
+            // 4. Busca as Cartas Públicas (para exibir no grid)
+            postModel.getPostsByUserId(userId),
+        ]);
+        
+        const stats = {
+            postCount: postCount,
+            lettersSent: lettersSent,
+            lettersReceived: lettersReceived,
+        };
+
+        // A página de perfil precisa dos dados do próprio usuário e dos posts.
+        res.render('pages/profile', { 
+            profile: user, 
+            stats: stats,
+            userPosts: userPosts, // NOVO: Passa as cartas do usuário para a view
+            error: null 
+        });
+        
+    } catch (error) {
+        // ... (resto do bloco catch, garantindo que userPosts seja um array vazio em caso de erro)
+        console.error('Erro ao buscar dados do perfil:', error);
+        const stats = { postCount: 0, lettersSent: 0, lettersReceived: 0 };
+        res.render('pages/profile', { 
+            profile: user, 
+            stats: stats, 
+            userPosts: [], 
+            error: 'Erro ao carregar estatísticas e cartas.' 
+        });
+    }
 };
 
 /**

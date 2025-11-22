@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escrever Nova Carta</title>
+    <%- include('../partials/head') %>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <main class="main-content">
+        <div class="card" style="max-width: 600px; margin: 30px auto;">
+            <h2 style="font-family: 'Arial', 'Helveltica'; color: #a97925; margin-bottom: 25px;">Escrever Carta Pública ✏️ </h2>
+
+            <% if (message) { %>
+                <div class="message-box success-message"><%= message %></div>
+            <% } %>
+
+            <% if (error) { %>
+                <div class="message-box error-message"><%= error %></div>
+            <% } %>
+
+            <form action="/new-letter" method="POST" enctype="multipart/form-data">
+                
+                <div class="form-group">
+                    <label for="title">Título da Carta (Opcional)</label>
+                    <input type="text" id="title" name="title" maxlength="255" value="<%= typeof formData !== 'undefined' ? formData.title : '' %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Conteúdo da Carta (Opcional)</label>
+                    <textarea id="content" name="content" rows="10"><%= typeof formData !== 'undefined' ? formData.content : '' %></textarea>
+                    <small style="color: #8E8E8E;">Escreva sua carta. (Título ou Conteúdo é obrigatório)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="post_image">Anexar Imagem (Opcional)</label>
+                    <input type="file" id="post_image" name="post_image" accept="image/*">
+                    <small style="color: #8E8E8E;">Máximo de 5MB.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="link">Anexar Link (Opcional)</label>
+                    <input type="url" id="link" name="link" placeholder="Ex: https://linkdorequerido.com.br" value="<%= typeof formData !== 'undefined' ? formData.link : '' %>">
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px; background-color:#a97925;">
+                    <i class="fas fa-paper-plane"></i> Publicar Carta no Feed
+                </button>
+            </form>
+        </div>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

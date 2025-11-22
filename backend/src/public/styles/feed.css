@@ -151,6 +151,10 @@ body{
     color: #f7f7f7;
 }
 
+p#logout{
+    color:white;
+}
+
 /* Responsividade (Para dispositivos móveis, a sidebar vai para baixo) */
 @media (max-width: 768px) {
     .feed-layout {

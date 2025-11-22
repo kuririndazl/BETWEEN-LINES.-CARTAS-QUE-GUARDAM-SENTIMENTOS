@@ -1,90 +1,121 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de <%= profile.username %> | CartaLenta</title>
+    <title>Perfil de <%= profile.username %>
+    </title>
     <%- include('../partials/head') %>
 </head>
+
 <body>
     <%- include('../partials/header') %>
 
-    <main class="main-content-profile">
-        <div class="profile-header">
-            <div class="profile-photo-area">
-                <img src="<%= profile.profilePictureUrl %>" alt="Foto de Perfil de <%= profile.username %>" class="profile-picture">
-            </div>
-
-            <div class="profile-info-area">
-                <div class="info-top">
-                    <h1><%= profile.username %></h1>
-                    <a href="/profile/edit" class="btn-edit">Editar Perfil</a>
-                
-                    <small style="color:#aaa; font-size: 12px;">ID: <%= profile.user_id %></small>
+        <main class="main-content-profile">
+            <div class="profile-header">
+                <div class="profile-photo-area">
+                    <img src="<%= profile.profilePictureUrl %>" alt="Foto de Perfil de <%= profile.username %>"
+                        class="profile-picture">
                 </div>
 
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <strong>4</strong>
-                        <span>posts</span>
+                <div class="profile-info-area">
+                    <div class="info-top">
+                        <h1>
+                            <%= profile.username %>
+                        </h1>
+                        <a href="/profile/edit" class="btn-edit">Editar Perfil</a>
+
+                        <small style="color:#aaa; font-size: 12px;">ID: <%= profile.user_id %></small>
                     </div>
-                    <div class="stat-item">
-                        <strong><%= stats.lettersSent %></strong>
-                        <span>cartas enviadas</span>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <strong>
+                                <%= stats.postCount %>
+                            </strong>
+                            <span>cartas públicas</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>
+                                <%= stats.lettersSent %>
+                            </strong>
+                            <span>cartas enviadas</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>
+                                <%= stats.lettersReceived %>
+                            </strong>
+                            <span>cartas recebidas</span>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <strong><%= stats.lettersReceived %></strong>
-                        <span>cartas recebidas</span>
+
+                    <!-- BIOGRAFIA -->
+                    <div class="profile-bio">
+                        <p>
+                            <%= profile.bio || 'Sem biografia ainda.' %>
+                        </p>
+                        <% const joinDate=new Date(profile.joinDate); const
+                            formattedDate=joinDate.toLocaleDateString('pt-BR', { year: 'numeric' , month: 'numeric' ,
+                            day: 'numeric' }); %>
+                            <small>Membro desde: <%= formattedDate %></small>
                     </div>
                 </div>
+            </div>
 
-                <!-- BIOGRAFIA -->
-                <div class="profile-bio">
-                    <p><%= profile.bio || 'Sem biografia ainda.' %></p>
-                    <% 
-                        const joinDate = new Date(profile.joinDate);
-                        const formattedDate = joinDate.toLocaleDateString('pt-BR', { year: 'numeric', month: 'numeric', day: 'numeric' });
-                    %>
-                    <small>Membro desde: <%= formattedDate %></small>
+            <!-- NAVEGAÇÃO DE CONTEÚDO -->
+            <div class="profile-nav">
+                <div class="profile-nav-item active">
+                    <i class="fas fa-th"></i> Cartas Públicas
+                </div>
+                <div class="profile-nav-item">
+                    <i class="fas fa-inbox"></i> Arquivo (Privado)
+                </div>
+                <div class="profile-nav-item">
+                    <i class="fas fa-bookmark"></i> Salvos
                 </div>
             </div>
-        </div>
 
-        <!-- NAVEGAÇÃO DE CONTEÚDO -->
-        <div class="profile-nav">
-            <div class="profile-nav-item active">
-                <i class="fas fa-th"></i> Cartas Públicas
-            </div>
-            <div class="profile-nav-item">
-                <i class="fas fa-inbox"></i> Arquivo (Privado)
-            </div>
-            <div class="profile-nav-item">
-                <i class="fas fa-bookmark"></i> Salvos
-            </div>
-        </div>
+            <div class="content-grid">
+                <% if (userPosts && userPosts.length> 0) { %>
+                    <% userPosts.forEach(function(post) { %>
+                        <div class="content-item"style="<%= post.image_url ? 'background-image: url(\'' + post.image_url + '\'); background-size: cover; background-position: center' : 'background-color: #f7f7f7' %>">
 
-        <div class="content-grid">
-            <div class="content-item">
-                <span>Carta 1</span>
+                            <% if (post.image_url) { %>
+                                <% // Bloco de lógica: Garante título ou resumo do conteúdo let displayTitle=post.title;
+                                    if (!displayTitle) { const content=String(post.content || '' );
+                                    displayTitle=content.length> 20 ? content.substring(0, 20) + '...' : content;
+                                    }
+                                    %>
+                                    <span class="post-title-overlay">
+                                        <%= displayTitle || 'Conteúdo' %>
+                                    </span>
+                                    <% } else { %>
+                                        <i class="fas fa-scroll"
+                                            style="font-size: 30px; color: #a97925; margin-bottom: 5px;"></i>
+                                        <span style="color: #6d4d16; font-weight: 600;">
+                                            <%= post.title || (String(post.content).substring(0, 20) + '...' )
+                                                || 'Carta sem título' %>
+                                        </span>
+                                        <% } %>
+                        </div>
+                        <% }); %>
+                            <% } else { %>
+                                <div class="content-item empty-state"
+                                    style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                                    <i class="fas fa-feather-alt"
+                                        style="font-size: 40px; color: #DBDBDB; margin-bottom: 15px;"></i>
+                                    <p style="color: #8E8E8E;">Você ainda não publicou nenhuma Carta Pública.</p>
+                                    <a href="/new-letter"
+                                        style="color: #a97925; font-weight: 600; margin-top: 10px; display: inline-block;">Escrever
+                                        a primeira!</a>
+                                </div>
+                                <% } %>
             </div>
-            <div class="content-item">
-                <span>Carta 2</span>
-            </div>
-            <div class="content-item">
-                <span>Carta 3</span>
-            </div>
-            <div class="content-item">
-                <span>Carta 4</span>
-            </div>
-            <div class="content-item">
-                <span>Carta 5</span>
-            </div>
-            <div class="content-item">
-                <span>Carta 6</span>
-            </div>
-        </div>
-    </main>
 
-    <%- include('../partials/footer') %>
+        </main>
+
+        <%- include('../partials/footer.ejs') %>
 </body>
+
 </html>

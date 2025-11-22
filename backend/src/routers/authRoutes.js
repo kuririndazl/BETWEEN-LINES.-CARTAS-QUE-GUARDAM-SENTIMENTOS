@@ -1,7 +1,10 @@
+// src/routers/authRoutes.js - Corrigido
+
 const express = require("express");
 const router = express.Router();
 
 const authController = require("../controllers/authController.js");
+const postController = require("../controllers/postController.js"); // <-- NOVO: Adicione esta linha!
 
 // Middleware para garantir que o usuário está autenticado
 const ensureAuth = authController.ensureAuthenticated;
@@ -15,7 +18,7 @@ router.post("/logout", authController.logoutUser);
 
 
 // Rotas de Páginas Principais (requer autenticação)
-router.get("/feed", ensureAuth, authController.getFeedPage);
+router.get("/feed", ensureAuth, postController.getFeedPosts);
 
 
 // AS ROTAS DE PERFIL FORAM MOVIDAS PARA userRoutes.js
