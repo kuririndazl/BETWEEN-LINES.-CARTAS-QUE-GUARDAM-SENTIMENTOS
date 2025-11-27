@@ -79,40 +79,39 @@
 
             <div class="content-grid">
                 <% if (userPosts && userPosts.length> 0) { %>
-                    <% userPosts.forEach(function(post) { %>
+                    <% userPosts.forEach(function(post) { 
+                        let displayTitle = post.title;
+                        if (!displayTitle) { 
+                            const content = String(post.content || '');
+                            displayTitle = content.length > 20 ? content.substring(0, 20) + '...' : content;
+                        }
+                    %>
                         <div class="content-item"style="<%= post.image_url ? 'background-image: url(\'' + post.image_url + '\'); background-size: cover; background-position: center' : 'background-color: #f7f7f7' %>">
-
                             <% if (post.image_url) { %>
-                                <% // Bloco de lógica: Garante título ou resumo do conteúdo let displayTitle=post.title;
-                                    if (!displayTitle) { const content=String(post.content || '' );
-                                    displayTitle=content.length> 20 ? content.substring(0, 20) + '...' : content;
-                                    }
-                                    %>
-                                    <span class="post-title-overlay">
-                                        <%= displayTitle || 'Conteúdo' %>
-                                    </span>
-                                    <% } else { %>
-                                        <i class="fas fa-scroll"
-                                            style="font-size: 30px; color: #a97925; margin-bottom: 5px;"></i>
-                                        <span style="color: #6d4d16; font-weight: 600;">
-                                            <%= post.title || (String(post.content).substring(0, 20) + '...' )
-                                                || 'Carta sem título' %>
-                                        </span>
-                                        <% } %>
-                        </div>
-                        <% }); %>
+                                <span class="post-title-overlay">
+                                    <%= displayTitle || 'Conteúdo' %>
+                                </span>
                             <% } else { %>
-                                <div class="content-item_empty-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
-                                    <div>
-                                        <i class="fas fa-feather-alt" style="font-size: 40px; color: #DBDBDB; margin-bottom: 15px;"></i>
-                                        <p style="color: #8E8E8E;">Você ainda não publicou nenhuma Carta Pública.</p>
-                                    </div>
-                                    <div>
-                                        <a href="/new-letter"
-                                            style="color: #a97925; font-weight: 600; margin-top: 10px; display: inline-block;">Escrever a primeira</a>
-                                    </div>
-                                </div>
-                                <% } %>
+                                <i class="fas fa-scroll"
+                                    style="font-size: 30px; color: #a97925; margin-bottom: 5px;"></i>
+                                <span style="color: #6d4d16; font-weight: 600;">
+                                    <%= displayTitle || 'Carta sem título' %>
+                                </span>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="content-item_empty-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                        <div>
+                            <i class="fas fa-feather-alt" style="font-size: 40px; color: #DBDBDB; margin-bottom: 15px;"></i>
+                            <p style="color: #8E8E8E;">Você ainda não publicou nenhuma Carta Pública.</p>
+                        </div>
+                        <div>
+                            <a href="/new-letter"
+                                style="color: #a97925; font-weight: 600; margin-top: 10px; display: inline-block;">Escrever a primeira</a>
+                        </div>
+                    </div>
+                <% } %>
             </div>
 
         </main>

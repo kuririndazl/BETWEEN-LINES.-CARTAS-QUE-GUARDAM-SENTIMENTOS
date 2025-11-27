@@ -28,10 +28,10 @@ const ensureAuth = authController.ensureAuthenticated;
 
 router.get('/profile', authController.ensureAuthenticated, userController.getProfilePage);
 
-router.get('/profile/:userId', authController.ensureAuthenticated, userController.getOtherProfilePage);
-
 router.get('/profile/edit', authController.ensureAuthenticated, userController.getEditProfilePage);
 router.post('/profile/edit', authController.ensureAuthenticated, upload.single('profilePicture'), userController.updateProfile);
+
+router.get('/profile/:userId', authController.ensureAuthenticated, userController.getOtherProfilePage);
 
 
 router.post('/user/toggle-follow', authController.ensureAuthenticated, userController.toggleFollow);

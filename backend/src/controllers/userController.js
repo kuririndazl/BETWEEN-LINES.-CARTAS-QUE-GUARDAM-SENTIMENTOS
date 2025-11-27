@@ -51,6 +51,11 @@ exports.getOtherProfilePage = async (req, res) => {
     const loggedInUserId = res.locals.user.user_id; 
     const targetUserId = parseInt(req.params.userId);
 
+    // Valida se targetUserId é um número válido
+    if (isNaN(targetUserId) || targetUserId <= 0) {
+        return res.status(400).send('ID de usuário inválido.');
+    }
+
     // Evita carregar o próprio perfil na rota alheia, redirecionando para a rota correta
     if (loggedInUserId === targetUserId) {
         return res.redirect('/profile'); 
@@ -96,9 +101,7 @@ exports.getOtherProfilePage = async (req, res) => {
 };
 
 
-/**
- * Ação de Seguir/Deixar de Seguir um usuário via AJAX.
- */
+/* Ação de Seguir/Deixar de Seguir um usuário via AJAX. */
 exports.toggleFollow = async (req, res) => {
     const followerId = req.session.userId;
     const { followingId, action } = req.body; 
@@ -124,9 +127,7 @@ exports.toggleFollow = async (req, res) => {
     }
 };
 
-/**
- * Renderiza a página de edição de perfil.
- */
+/* Renderiza a página de edição de perfil. */
 exports.getEditProfilePage = async (req, res) => {
     // Autenticação já garantida, dados do usuário já em res.locals.user
     const user = res.locals.user;
