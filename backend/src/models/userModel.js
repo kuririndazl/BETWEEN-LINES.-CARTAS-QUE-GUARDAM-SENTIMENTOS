@@ -125,6 +125,38 @@ async function countReceivedDirectLetters(userId) {
     return rows[0] ? rows[0].receivedCount : 0;
 }
 
+async function followUser(followerId, followingId) {
+    if (followerId === followingId) return false;
+
+    const [result] = await pool.query(
+        'INSERT IGNORE INTO Follows (follower_id, following_id) VALUES (?, ?)',
+        [followerId, followingId]
+    );
+    return result.affectedRows > 0;
+}
+
+/**
+ * Remove um relacionamento de 'seguir'.
+ */
+async function unfollowUser(followerId, followingId) {
+    const [result] = await pool.query(
+        'DELETE FROM Follows WHERE follower_id = ? AND following_id = ?',
+        [followerId, followingId]
+    );
+    return result.affectedRows > 0;
+}
+
+/**
+ * Verifica se um usuário está seguindo outro.
+ */
+async function isFollowing(followerId, followingId) {
+    const [rows] = await pool.query(
+        'SELECT 1 FROM Follows WHERE follower_id = ? AND following_id = ? LIMIT 1',
+        [followerId, followingId]
+    );
+    return rows.length > 0;
+}
+
 module.exports = {
     createUser, 
     findUserByEmail,
@@ -133,4 +165,7 @@ module.exports = {
     updateProfilePicture,
     countSentDirectLetters, 
     countReceivedDirectLetters,
+    followUser,
+    unfollowUser,
+    isFollowing
 }

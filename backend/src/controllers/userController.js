@@ -3,58 +3,19 @@ const postModel = require('../models/postModel');
 const path = require('path');
 const fs = require('fs'); 
 
-exports.getProfilePage = async (req, res) => {
-    // Autenticação já garantida pelo middleware, dados do usuário já em res.locals.user
-    const user = res.locals.user;
-    
-    try {
-        const userId = user.user_id;
-
-        // NOVO: Faz a chamada simultânea para buscar todos os dados reais
-        const [postCount, lettersSent, lettersReceived] = await Promise.all([
-            // 1. Posts (Cartas Públicas)
-            postModel.countPostsByUserId(userId),
-            // 2. Cartas Diretas Enviadas
-            userModel.countSentDirectLetters(userId),
-            // 3. Cartas Diretas Recebidas
-            userModel.countReceivedDirectLetters(userId),
-        ]);
-        
-        // Dados de estatísticas com valores reais
-        const stats = {
-            postCount: postCount,           // Contagem real da tabela Posts
-            lettersSent: lettersSent,       // Contagem real da tabela Direct_Letters (sender_id)
-            lettersReceived: lettersReceived, // Contagem real da tabela Direct_Letters (receiver_id)
-        };
-
-        // A página de perfil precisa dos dados do próprio usuário.
-        res.render('pages/profile', { profile: user, stats: stats });
-        
-    } catch (error) {
-        console.error('Erro ao buscar dados do perfil:', error);
-        
-        // Em caso de erro, renderiza com zero posts, mas exibe o perfil
-        const stats = { postCount: 0, lettersSent: 0, lettersReceived: 0 };
-        res.render('pages/profile', { profile: user, stats: stats, error: 'Erro ao carregar estatísticas.' });
-    }
-};
 
 exports.getProfilePage = async (req, res) => {
-    const user = res.locals.user;
+    const loggedInUserId = res.locals.user.user_id; 
     
     try {
-        const userId = user.user_id;
-
-        // NOVO: Adiciona a busca dos posts no Promise.all
+        const targetUser = await userModel.findUserById(loggedInUserId);
+        
+        // 1. Busca as estatísticas e posts
         const [postCount, lettersSent, lettersReceived, userPosts] = await Promise.all([
-            // 1. Posts (Cartas Públicas)
-            postModel.countPostsByUserId(userId),
-            // 2. Cartas Diretas Enviadas
-            userModel.countSentDirectLetters(userId),
-            // 3. Cartas Diretas Recebidas
-            userModel.countReceivedDirectLetters(userId),
-            // 4. Busca as Cartas Públicas (para exibir no grid)
-            postModel.getPostsByUserId(userId),
+            postModel.countPostsByUserId(loggedInUserId),
+            userModel.countSentDirectLetters(loggedInUserId),
+            userModel.countReceivedDirectLetters(loggedInUserId),
+            postModel.getPostsByUserId(loggedInUserId),
         ]);
         
         const stats = {
@@ -63,24 +24,103 @@ exports.getProfilePage = async (req, res) => {
             lettersReceived: lettersReceived,
         };
 
-        // A página de perfil precisa dos dados do próprio usuário e dos posts.
+        // 2. Renderiza a view 'profile.ejs'
         res.render('pages/profile', { 
-            profile: user, 
+            profile: targetUser,             
             stats: stats,
-            userPosts: userPosts, // NOVO: Passa as cartas do usuário para a view
+            userPosts: userPosts,
             error: null 
         });
         
     } catch (error) {
-        // ... (resto do bloco catch, garantindo que userPosts seja um array vazio em caso de erro)
         console.error('Erro ao buscar dados do perfil:', error);
         const stats = { postCount: 0, lettersSent: 0, lettersReceived: 0 };
         res.render('pages/profile', { 
-            profile: user, 
+            profile: res.locals.user, 
             stats: stats, 
             userPosts: [], 
             error: 'Erro ao carregar estatísticas e cartas.' 
         });
+    }
+};
+
+/**
+ * Renderiza a página de PERFIL ALHEIO (/profile/:userId).
+ */
+exports.getOtherProfilePage = async (req, res) => {
+    const loggedInUserId = res.locals.user.user_id; 
+    const targetUserId = parseInt(req.params.userId);
+
+    // Evita carregar o próprio perfil na rota alheia, redirecionando para a rota correta
+    if (loggedInUserId === targetUserId) {
+        return res.redirect('/profile'); 
+    }
+
+    try {
+        const targetUser = await userModel.findUserById(targetUserId);
+
+        if (!targetUser) {
+            return res.status(404).render('pages/error', { message: 'Perfil não encontrado.' });
+        }
+        
+        // 1. Busca o status de 'seguindo'
+        const isFollowing = await userModel.isFollowing(loggedInUserId, targetUserId);
+
+        // 2. Busca as estatísticas e posts
+        const [postCount, lettersSent, lettersReceived, userPosts] = await Promise.all([
+            postModel.countPostsByUserId(targetUserId),
+            userModel.countSentDirectLetters(targetUserId),
+            userModel.countReceivedDirectLetters(targetUserId),
+            postModel.getPostsByUserId(targetUserId),
+        ]);
+        
+        const stats = {
+            postCount: postCount,
+            lettersSent: lettersSent,
+            lettersReceived: lettersReceived,
+        };
+
+        // 3. Renderiza a nova view 'otherprofile.ejs'
+        res.render('pages/otherprofile', { 
+            profile: targetUser,             // Dados do perfil que está sendo visto
+            stats: stats,
+            userPosts: userPosts,
+            isFollowing: isFollowing,        // Flag para botão de Seguir/Deixar de Seguir
+            error: null 
+        });
+        
+    } catch (error) {
+        console.error('Erro ao buscar dados do perfil alheio:', error);
+        return res.status(500).render('pages/error', { message: 'Erro interno ao carregar o perfil.' });
+    }
+};
+
+
+/**
+ * Ação de Seguir/Deixar de Seguir um usuário via AJAX.
+ */
+exports.toggleFollow = async (req, res) => {
+    const followerId = req.session.userId;
+    const { followingId, action } = req.body; 
+
+    if (followerId === parseInt(followingId)) {
+        return res.status(400).json({ success: false, message: 'Você não pode seguir a si mesmo.' });
+    }
+
+    try {
+        let success = false;
+        if (action === 'follow') {
+            success = await userModel.followUser(followerId, followingId);
+            return res.json({ success: success, message: success ? 'Seguindo!' : 'Você já segue este usuário.' });
+        } else if (action === 'unfollow') {
+            success = await userModel.unfollowUser(followerId, followingId);
+            return res.json({ success: success, message: success ? 'Deixou de seguir.' : 'Você não segue este usuário.' });
+        } else {
+            return res.status(400).json({ success: false, message: 'Ação inválida.' });
+        }
+    } catch (error) {
+        console.error('Erro ao seguir/deixar de seguir:', error);
+        return res.status(500).json({ success: false, message: 'Erro interno do servidor.' });
     }
 };
 

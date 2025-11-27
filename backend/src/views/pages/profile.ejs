@@ -7,6 +7,7 @@
     <title>Perfil de <%= profile.username %>
     </title>
     <%- include('../partials/head') %>
+    <link rel="stylesheet" href="/public/styles/profile.css">
 </head>
 
 <body>
@@ -101,14 +102,15 @@
                         </div>
                         <% }); %>
                             <% } else { %>
-                                <div class="content-item empty-state"
-                                    style="grid-column: 1 / -1; text-align: center; padding: 50px;">
-                                    <i class="fas fa-feather-alt"
-                                        style="font-size: 40px; color: #DBDBDB; margin-bottom: 15px;"></i>
-                                    <p style="color: #8E8E8E;">Você ainda não publicou nenhuma Carta Pública.</p>
-                                    <a href="/new-letter"
-                                        style="color: #a97925; font-weight: 600; margin-top: 10px; display: inline-block;">Escrever
-                                        a primeira!</a>
+                                <div class="content-item_empty-state" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                                    <div>
+                                        <i class="fas fa-feather-alt" style="font-size: 40px; color: #DBDBDB; margin-bottom: 15px;"></i>
+                                        <p style="color: #8E8E8E;">Você ainda não publicou nenhuma Carta Pública.</p>
+                                    </div>
+                                    <div>
+                                        <a href="/new-letter"
+                                            style="color: #a97925; font-weight: 600; margin-top: 10px; display: inline-block;">Escrever a primeira</a>
+                                    </div>
                                 </div>
                                 <% } %>
             </div>

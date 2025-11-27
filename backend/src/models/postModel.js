@@ -71,9 +71,32 @@ async function getPostsByUserId(userId) {
     return rows; 
 }
 
+async function deletePost(postId, userId) {
+    // A condição WHERE garante que apenas o dono do post possa deletá-lo
+    const [result] = await pool.query(
+        'DELETE FROM Posts WHERE post_id = ? AND user_id = ?',
+        [postId, userId]
+    );
+    // Retorna true se pelo menos uma linha foi afetada (o post foi deletado)
+    return result.affectedRows > 0;
+}
+
+async function registerReport(reporterId, postId, reason) {
+    console.log(`[ALERTA DE DENÚNCIA] Post ID: ${postId} | Usuário Denunciante: ${reporterId} | Motivo: ${reason}`);
+    const [result] = await pool.query(
+        'INSERT INTO Reports (reporter_id, post_id, reason) VALUES (?, ?, ?)',
+        [reporterId, postId, reason]
+    );
+    return result.insertId;
+    
+    return true;
+}
+
 module.exports = {
     createPost,
     getAllPosts,
     countPostsByUserId,
-    getPostsByUserId, // NOVO: Adiciona a função de buscar posts do usuário
+    getPostsByUserId,
+    deletePost, 
+    registerReport, 
 };

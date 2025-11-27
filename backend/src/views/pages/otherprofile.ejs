@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de <%= profile.username %></title>
+    <%- include('../partials/head') %>
+    <link rel="stylesheet" href="/public/styles/otherprofile.css">
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="main-content-profile">
+        <div class="profile-header">
+            <div class="profile-photo-area">
+                <img src="<%= profile.profilePictureUrl %>" alt="Foto de perfil de <%= profile.username %>">
+            </div>
+
+            <div class="profile-info-area">
+                <div class="info-top">
+                    <h1>
+                        <%= profile.username %>
+                    </h1>
+                    
+                    <div class="external-actions" style="display: flex;">
+                        <button id="followButton" data-user-id="<%= profile.user_id %>" class="btn-edit" style="margin-right: 10px;">
+                            <%= isFollowing ? 'Deixar de Seguir' : 'Seguir' %>
+                        </button>
+                        <a href="/chat/<%= profile.user_id %>" class="btn-primary" style="background-color: #5cb85c; border-color: #4cae4c;">
+                            <i class="far fa-paper-plane"></i> Conversar
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="stats-area">
+                    <div class="stat-item"><strong><%= stats.postCount %></strong> cartas públicas</div>
+                    <div class="stat-item"><strong><%= stats.lettersSent %></strong> cartas enviadas</div>
+                    <div class="stat-item"><strong><%= stats.lettersReceived %></strong> cartas recebidas</div>
+
+                    <div class="stat-item"><strong>0</strong> seguidores</div>
+                    <div class="stat-item"><strong>0</strong> seguindo</div>
+                </div>
+
+                <div class="bio-area">
+                    <p><%= profile.bio %></p>
+                    <small style="color: #8E8E8E;">Membro desde <%= new Date(profile.memberSince).toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' }) %></small>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <nav class="profile-nav">
+                <button class="nav-tab active">Cartas Públicas</button>
+                <button class="nav-tab">Arquivo (Privado)</button>
+                <button class="nav-tab">Salvos</button>
+            </nav>
+
+            <div class="tab-content active">
+                <% if (userPosts.length === 0) { %>
+                    <p style="text-align: center; color: #8E8E8E; margin-top: 50px;">
+                        <%= profile.username %> ainda não publicou nenhuma Carta Pública.
+                    </p>
+                <% } %>
+                <p style="text-align: center; margin-top: 20px;">Exibindo <%= userPosts.length %> cartas públicas.</p>
+            </div>
+
+            </div>
+    </main>
+    
+    <script>
+        document.getElementById('followButton').addEventListener('click', async (e) => {
+            const button = e.currentTarget;
+            const followingId = button.dataset.userId;
+            const isCurrentlyFollowing = button.textContent.trim() === 'Deixar de Seguir'; 
+            const action = isCurrentlyFollowing ? 'unfollow' : 'follow';
+            
+            const response = await fetch('/user/toggle-follow', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ followingId: followingId, action: action })
+            });
+            
+            const result = await response.json();
+
+            if (result.success) {
+                // Atualiza o texto do botão
+                button.textContent = isCurrentlyFollowing ? 'Seguir' : 'Deixar de Seguir';
+                alert(result.message);
+            } else {
+                alert('Erro na operação: ' + result.message);
+            }
+        });
+    </script>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

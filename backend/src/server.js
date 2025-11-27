@@ -12,13 +12,10 @@ app.set('view engine', 'ejs');
 const VIEWS_ROOT = path.join(__dirname, 'views')
 app.set('views', VIEWS_ROOT);
 
-// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Adiciona a pasta 'uploads' aos arquivos estáticos para que as fotos de perfil funcionem
 app.use('/public', express.static(path.join(__dirname, 'public'))); 
 
-// Configuração de sessão para login
 app.use(session({
     secret: process.env.SESSION_SECRET || 'chave-secreta-default', 
     resave: false,
@@ -33,14 +30,15 @@ app.use(session({
 
 const authController = require('./controllers/authController.js');
 const userRoutes = require('./routers/userRoutes.js');
-const postRoutes = require('./routers/postRoutes.js'); // NOVO: Importa rotas de posts
-// IMPORTANTE: Adiciona o middleware para carregar os dados do usuário (foto, nome) em res.locals.user
+const postRoutes = require('./routers/postRoutes.js');
+const chatRoutes = require('./routers/chatRoutes.js');
 app.use(authController.injectUserData); 
 
 const authRoutes = require('./routers/authRoutes.js');
 app.use('/', authRoutes);
 app.use('/', userRoutes);
-app.use('/', postRoutes); // NOVO: Adiciona rotas de post
+app.use('/', postRoutes);
+app.use('/', chatRoutes);
 
 app.get('/', (req, res) => {
     if (req.session.userId) {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,49 +16,80 @@
                 <section class="feed-posts">
 
                     <% if (message) { %>
-                        <div class="message-box success-message" style="margin-bottom: 20px;"><%= message %></div>
-                    <% } %>
+                        <div class="message-box success-message" style="margin-bottom: 20px;">
+                            <%= message %>
+                        </div>
+                        <% } %>
 
-                    <% if (posts.length === 0) { %>
-                        <div class="post-card" style="text-align: center; padding: 40px; color: #8E8E8E;">
-                            <i class="fas fa-inbox" style="font-size: 50px; margin-bottom: 15px;"></i>
-                            <p>Nenhuma carta pública ainda. Seja o primeiro a escrever!</p>
-                        </div>
-                    <% } %>
-                    
-                    <% posts.forEach(function(post) { %>
-                        <div class="post-card">
-                            <div class="post-header">
-                                <img src="<%= post.profilePictureUrl || '/public/images/default_avatar.png' %>" alt="<%= post.username %>">
-                                <span><%= post.username %></span>
-                            </div>
-                            <div class="post-content">
-                                <% if (post.imageUrl) { %>
-                                    <img class="post-image" src="<%= post.imageUrl %>" alt="Imagem da carta">
-                                <% } else { %>
-                                    <i class="fas fa-feather-alt" style="font-size: 80px; color: #DBDBDB;"></i>
+                            <% if (posts.length===0) { %>
+                                <div class="post-card" style="text-align: center; padding: 40px; color: #cfc3ba;">
+                                    <i class="fas fa-inbox" style="font-size: 50px; margin-bottom: 15px;"></i>
+                                    <p>Nenhuma carta pública ainda. Seja o primeiro a escrever.</p>
+                                </div>
                                 <% } %>
-                            </div>
-                            <div class="post-actions">
-                                <button><i class="far fa-heart"></i></button>
-                                <button><i class="far fa-comment"></i></button>
-                                <button><i class="far fa-paper-plane"></i></button>
-                            </div>
-                            <div class="post-caption">
-                                <strong><%= post.username %></strong> 
-                                
-                                <% if (post.title) { %>
-                                    <p style="font-weight: 600; margin-top: 5px;">*<%= post.title %>*</p>
-                                <% } %>
-                                
-                                <pre style="white-space: pre-wrap; font-family: inherit;"><%= post.content %></pre> 
-                                
-                                <small style="color: #8E8E8E; display: block; margin-top: 10px;">Enviado em <%= new Date(post.creationDate).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' }) %></small>
-                            </div>
-                        </div>
-                    <% }); %>
-                    
-                    </section>
+
+                                    <% posts.forEach(function(post) { %>
+                                        <div class="post-card">
+                                            <div class="post-card">
+                                                <div class="post-header">
+                                                    <a href="/profile/<%= post.userId %>"> <img
+                                                            src="<%= post.profilePictureUrl || '/public/images/default_avatar.png' %>"
+                                                            alt="<%= post.username %>">
+                                                    </a>
+                                                    <a href="/profile/<%= post.userId %>"> <span>
+                                                            <%= post.username %>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="post-content">
+                                                <% if (post.imageUrl) { %>
+                                                    <img class="post-image" src="<%= post.imageUrl %>"
+                                                        alt="Imagem da carta">
+                                                    <% } else { %>
+                                                        <i class="fas fa-feather-alt"
+                                                            style="font-size: 80px; color: #DBDBDB;"></i>
+                                                        <% } %>
+                                            </div>
+
+                                            <div class="post-actions">
+                                                <% if (user && post.userId===user.user_id) { %>
+                                                    <button class="action-delete" data-post-id="<%= post.postId %>"
+                                                        title="Apagar esta carta">
+                                                        <p>Deletar</p>
+                                                    </button>
+                                                    <% } else { %>
+                                                        <button class="action-report" data-post-id="<%= post.postId %>"
+                                                            title="Denunciar esta carta">
+                                                            <p>Reportar</p>
+                                                        </button>
+                                                        <% } %>
+
+                                            </div>
+
+                                            <div class="post-caption">
+                                                <strong>
+                                                    <%= post.username %>
+                                                </strong>
+
+                                                <% if (post.title) { %>
+                                                    <p style="font-weight: 600; margin-top: 5px;">*<%= post.title %>*
+                                                    </p>
+                                                    <% } %>
+
+                                                        <pre
+                                                            style="white-space: pre-wrap; font-family: inherit;"><%= post.content %></pre>
+
+                                                        <small
+                                                            style="color: #8E8E8E; display: block; margin-top: 10px;">Enviado
+                                                            em <%= new
+                                                                Date(post.creationDate).toLocaleDateString('pt-BR', {
+                                                                day: 'numeric' , month: 'short' }) %></small>
+                                            </div>
+                                        </div>
+                                        <% }); %>
+
+                </section>
 
                 <aside class="sidebar">
                     <div class="user-suggestion-card" style="margin-bottom: 30px;">
@@ -70,7 +102,8 @@
                         </div>
                     </div>
 
-                    <div class="subtitle" style="font-weight: 600; color: #8E8E8E; margin-bottom: 15px;">Sugestões para Você</div>
+                    <div class="subtitle" style="font-weight: 600; color: #8E8E8E; margin-bottom: 15px;">Sugestões para
+                        Você</div>
 
                     <div class="user-suggestion-card">
                         <img src="/public/img/escritor_icon.jpeg" alt="Manin_macabro">
@@ -87,7 +120,7 @@
                             <div class="username">colecionador_selos</div>
                             <div class="subtitle">Colecionador</div>
                         </div>
-                        <a href="#" class="follow"  style="font-size: 12px; font-weight: 600;">Seguir</a>
+                        <a href="#" class="follow" style="font-size: 12px; font-weight: 600;">Seguir</a>
                     </div>
 
                     <a href="/new-letter" class="write-letter-btn">
@@ -97,6 +130,102 @@
             </div>
         </main>
 
+        <div id="reportModal" class="modal"
+            style="display:none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+            <div class="modal-content"
+                style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 400px; border-radius: 8px;">
+                <span class="close-btn"
+                    style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+                <h2>Denunciar Postagem</h2>
+                <p>Por favor, explique o que te incomoda nesta postagem:</p>
+                <form id="reportForm">
+                    <input type="hidden" id="reportPostId" name="postId">
+                    <textarea id="reportReason" name="reason" rows="4" required
+                        style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+                    <button type="submit" class="btn-primary"
+                        style="background-color: #d9534f; border-color: #d43f3a; width: 100%;">Enviar Denúncia</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            // 1. Lógica do Modal de Denúncia (Abrir/Fechar)
+            const reportModal = document.getElementById('reportModal');
+            const closeBtn = document.querySelector('.close-btn');
+            const reportForm = document.getElementById('reportForm');
+            const reportPostIdInput = document.getElementById('reportPostId');
+            const reportReasonInput = document.getElementById('reportReason');
+
+            document.querySelectorAll('.action-report').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const postId = e.currentTarget.dataset.postId;
+                    reportPostIdInput.value = postId;
+                    reportModal.style.display = 'block';
+                });
+            });
+
+            closeBtn.onclick = () => { reportModal.style.display = 'none'; };
+            window.onclick = (event) => {
+                if (event.target === reportModal) {
+                    reportModal.style.display = 'none';
+                }
+            };
+
+            // 2. Lógica para PROCESSAR o envio da denúncia (AJAX)
+            reportForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const data = {
+                    postId: reportPostIdInput.value,
+                    reason: reportReasonInput.value.trim()
+                };
+
+                const response = await fetch('/post/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                reportModal.style.display = 'none';
+                reportReasonInput.value = ''; // Limpa o input
+
+                if (result.success) {
+                    alert(result.message);
+                } else {
+                    alert('Erro ao enviar denúncia: ' + result.message);
+                }
+            });
+
+            // 3. Lógica para PROCESSAR a exclusão do post (AJAX)
+            document.querySelectorAll('.action-delete').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const postId = e.currentTarget.dataset.postId;
+
+                    if (confirm('Tem certeza de que deseja apagar esta carta pública? Esta ação é irreversível.')) {
+
+                        const response = await fetch('/post/delete', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ postId: postId })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Remove o post visualmente do feed
+                            e.currentTarget.closest('.post-card').remove();
+                            alert(result.message);
+                        } else {
+                            alert('Erro ao apagar post: ' + (result.message || 'Ocorreu um erro desconhecido.'));
+                        }
+                    }
+                });
+            });
+        </script>
+
         <%- include('../partials/footer.ejs') %>
 </body>
+
 </html>

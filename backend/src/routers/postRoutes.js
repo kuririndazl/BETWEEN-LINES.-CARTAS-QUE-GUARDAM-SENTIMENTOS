@@ -29,14 +29,13 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 } 
 });
 
-
-// ROTAS DE POSTS/CARTAS PÚBLICAS
-// GET: Renderiza o formulário de nova carta
 router.get("/new-letter", ensureAuth, postController.getWriteLetterPage);
 
-// POST: Processa o envio da nova carta (com upload opcional de imagem)
-// 'post_image' é o nome do campo de arquivo no formulário
 router.post("/new-letter", ensureAuth, upload.single('post_image'), postController.createPost);
 
+router.post('/post/delete', authController.ensureAuthenticated, postController.deletePost);
+
+// Rota para denunciar um post (protegida por autenticação)
+router.post('/post/report', authController.ensureAuthenticated, postController.reportPost);
 
 module.exports = router;

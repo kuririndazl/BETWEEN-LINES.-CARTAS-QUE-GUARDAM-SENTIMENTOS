@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bate-Papo</title>
+    <%- include('../partials/head.ejs') %>
+    <style>
+        /* Estilos básicos para o layout de chat */
+        .chat-layout { display: flex; max-width: 1200px; margin: 20px auto; height: 75vh; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }
+        .sidebar-conversations { width: 30%; border-right: 1px solid #eee; overflow-y: auto; background-color: #f7f7f7; }
+        .chat-window { width: 70%; display: flex; flex-direction: column; }
+        .messages-list { flex-grow: 1; overflow-y: auto; padding: 20px; background-color: #fff; }
+        .message-input { padding: 15px; border-top: 1px solid #ccc; background-color: #f7f7f7; }
+        .message-bubble { padding: 8px 12px; border-radius: 15px; margin-bottom: 10px; max-width: 70%; line-height: 1.4; }
+        .sent { background-color: #dcf8c6; align-self: flex-end; margin-left: auto; }
+        .received { background-color: #ffffff; border: 1px solid #eee; align-self: flex-start; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/header.ejs') %>
+
+    <main class="main-content">
+        <h1>Bate-Papo Privado</h1>
+        
+        <div class="chat-layout">
+            <div class="sidebar-conversations">
+                <h2 style="padding: 10px; border-bottom: 1px solid #eee; margin-top: 0;">Conversas</h2>
+                <div style="padding: 10px;">
+                    <p style="color: #8E8E8E; font-size: 0.9em;">(Lista de chats virá aqui.)</p>
+                </div>
+            </div>
+            
+            <div class="chat-window">
+                <% if (targetUser) { %>
+                    <div class="chat-header" style="padding: 15px; border-bottom: 1px solid #ccc; background-color: #fff;">
+                        Conversando com: <a href="/profile/<%= targetUser.user_id %>"><strong><%= targetUser.username %></strong></a>
+                    </div>
+
+                    <div class="messages-list" id="messagesList">
+                        <% if (messages.length === 0) { %>
+                            <p style="text-align: center; color: #aaa;">Comece uma conversa!</p>
+                        <% } %>
+
+                        <% messages.forEach(function(message) { %>
+                            <div class="message-bubble <%= message.sender_id === user.user_id ? 'sent' : 'received' %>">
+                                <strong><%= message.sender_id === user.user_id ? 'Eu' : message.username %>:</strong> 
+                                
+                                <% if (message.type === 'text') { %>
+                                    <p><%= message.content %></p>
+                                <% } else { %>
+                                    <p style="font-style: italic; color: #333;">[<%= message.type.toUpperCase() %>]: <%= message.content %></p>
+                                    <a href="<%= message.media_url %>" target="_blank" style="color: blue;">Visualizar Mídia</a>
+                                <% } %>
+                                <small style="display: block; text-align: right; color: #888; font-size: 0.7em;"><%= new Date(message.timestamp).toLocaleTimeString('pt-BR') %></small>
+                            </div>
+                        <% }); %>
+                    </div>
+
+                    <div class="message-input">
+                        <form id="chatForm" style="display: flex;">
+                            <input type="hidden" name="receiverId" value="<%= targetUser.user_id %>">
+                            <input type="text" id="messageContent" placeholder="Escreva sua carta de bate-papo..." required style="flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                            <button type="submit" class="btn-primary" style="margin-left: 10px; padding: 10px 20px; white-space: nowrap;">Enviar</button>
+                        </form>
+                    </div>
+
+                    <script>
+                        // Rolagem automática para o final da lista de mensagens
+                        const messagesList = document.getElementById('messagesList');
+                        messagesList.scrollTop = messagesList.scrollHeight;
+
+                        document.getElementById('chatForm').addEventListener('submit', async (e) => {
+                            e.preventDefault();
+                            const contentInput = document.getElementById('messageContent');
+                            const receiverId = document.querySelector('input[name="receiverId"]').value;
+                            const content = contentInput.value;
+
+                            if (!content.trim()) return;
+
+                            const data = {
+                                receiverId: receiverId,
+                                content: content,
+                                type: 'text' // Futuramente, 'image' ou 'video'
+                            };
+
+                            try {
+                                const response = await fetch('/chat/send-message', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(data)
+                                });
+
+                                // Verifica se a resposta HTTP é OK (código 200-299)
+                                if (response.ok) {
+                                    const result = await response.json();
+                                    
+                                    if (result.success) {
+                                        contentInput.value = '';
+                                        // Se deu sucesso no backend, recarrega para atualizar a tela e as estatísticas.
+                                        window.location.reload(); 
+                                    } else {
+                                        // Erro lógico retornado pelo controller (ex: faltou um campo)
+                                        alert('Erro ao enviar mensagem: ' + (result.message || 'Erro desconhecido.'));
+                                    }
+                                } else {
+                                    // Resposta HTTP de erro (4xx ou 5xx).
+                                    // Pega a mensagem de erro do JSON do controller
+                                    const errorResult = await response.json();
+                                    alert('Erro ao enviar mensagem: ' + (errorResult.message || 'Erro de conexão ou interno.'));
+                                }
+                            } catch (error) {
+                                // Erro na rede (não conseguiu se conectar ao servidor)
+                                console.error('Erro de rede:', error);
+                                alert('Erro de rede: Não foi possível conectar ao servidor.');
+                            }
+                        });
+                    </script>
+                <% } else { %>
+                    <div style="padding: 50px; text-align: center; color: #8E8E8E; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <i class="fas fa-comment-dots" style="font-size: 50px; margin-bottom: 15px;"></i>
+                        <p>Selecione uma conversa ao lado ou vá até um perfil para iniciar um bate-papo.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer.ejs') %>
+</body>
+</html>

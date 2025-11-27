@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
-// A constante 'pool' não é necessária aqui.
 const pool = {}; 
 
 // Middleware para garantir que o usuário está autenticado

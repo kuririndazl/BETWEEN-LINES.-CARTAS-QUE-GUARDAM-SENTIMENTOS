@@ -24,17 +24,16 @@ const upload = multer({
     limits: { fileSize: 2 * 1024 * 1024 } // Limite de 2MB
 });
 
-
-// Middleware para garantir que o usuário está autenticado
 const ensureAuth = authController.ensureAuthenticated;
 
-// ROTAS DE PERFIL
-router.get("/profile", ensureAuth, userController.getProfilePage);
-router.get("/profile/edit", ensureAuth, userController.getEditProfilePage);
+router.get('/profile', authController.ensureAuthenticated, userController.getProfilePage);
 
-// Processa a atualização do perfil. 
-// Multer deve vir antes do userController.updateProfile
-router.post("/profile", ensureAuth, upload.single('profile_picture'), userController.updateProfile);
+router.get('/profile/:userId', authController.ensureAuthenticated, userController.getOtherProfilePage);
 
+router.get('/profile/edit', authController.ensureAuthenticated, userController.getEditProfilePage);
+router.post('/profile/edit', authController.ensureAuthenticated, upload.single('profilePicture'), userController.updateProfile);
+
+
+router.post('/user/toggle-follow', authController.ensureAuthenticated, userController.toggleFollow);
 
 module.exports = router;

@@ -1,21 +1,13 @@
-// src/controllers/postController.js
-
 const postModel = require('../models/postModel');
 const path = require('path');
 const fs = require('fs');
 
-/**
- * Renderiza a página para escrever uma nova carta/post.
- */
+
 exports.getWriteLetterPage = (req, res) => {
     // Garante que a view terá os dados de user (injetados por authController.injectUserData)
     res.render('pages/write-letter', { error: null, message: null });
 };
 
-
-/**
- * Processa o envio de uma nova carta/post.
- */
 exports.createPost = async (req, res) => {
     const userId = req.session.userId;
     const { title, content, link } = req.body; // Adicionado 'link'
@@ -43,8 +35,6 @@ exports.createPost = async (req, res) => {
         imageUrl = `/public/uploads/post_images/${req.file.filename}`;
     }
 
-    // Se a carta tem um link, podemos anexa-lo ao conteúdo (ou tratar em outra coluna)
-    // Por simplicidade, vamos anexar ao conteúdo.
     let finalContent = content || '';
     if (link) {
         // Uma quebra de linha simples ou um separador
@@ -80,10 +70,6 @@ exports.createPost = async (req, res) => {
     }
 };
 
-
-/**
- * Obtém todos os posts para exibir no feed.
- */
 exports.getFeedPosts = async (req, res) => {
     try {
         const posts = await postModel.getAllPosts();
@@ -103,5 +89,50 @@ exports.getFeedPosts = async (req, res) => {
             posts: [], 
             message: 'Erro ao carregar o feed. Tente novamente mais tarde.'
         });
+    }
+};
+
+exports.deletePost = async (req, res) => {
+    // O ID do usuário logado vem da sessão
+    const userId = req.session.userId;
+    // O ID do post a ser deletado vem do corpo da requisição (geralmente via formulário ou AJAX)
+    const { postId } = req.body; 
+
+    if (!postId) {
+        return res.status(400).json({ success: false, message: 'ID do post ausente.' });
+    }
+
+    try {
+        const deleted = await postModel.deletePost(postId, userId);
+
+        if (deleted) {
+            // Em uma rede social, você também precisaria deletar a imagem associada do disco aqui.
+            return res.json({ success: true, message: 'Postagem deletada com sucesso.' });
+        } else {
+            // Isso ocorre se o post_id não existir OU se o user_id não for o autor.
+            return res.status(403).json({ success: false, message: 'Não autorizado ou post não encontrado.' });
+        }
+    } catch (error) {
+        console.error('Erro ao deletar post:', error);
+        return res.status(500).json({ success: false, message: 'Erro interno ao deletar post.' });
+    }
+};
+
+
+exports.reportPost = async (req, res) => {
+    const reporterId = req.session.userId;
+    const { postId, reason } = req.body; 
+
+    if (!postId || !reason) {
+        return res.status(400).json({ success: false, message: 'ID do post ou motivo ausente.' });
+    }
+
+    try {
+        await postModel.registerReport(reporterId, postId, reason);
+        // Retorna sucesso mesmo se for apenas um log, conforme a regra de negócio
+        return res.json({ success: true, message: 'Denúncia registrada com sucesso. Agradecemos sua colaboração.' });
+    } catch (error) {
+        console.error('Erro ao registrar denúncia:', error);
+        return res.status(500).json({ success: false, message: 'Erro interno ao registrar denúncia.' });
     }
 };

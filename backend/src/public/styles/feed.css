@@ -155,6 +155,33 @@ p#logout{
     color:white;
 }
 
+.action-delete{
+    width:80px;
+}
+
+.action-delete p{
+    font-size: 18px;
+}
+
+.action-report{
+    width:80px;
+}
+
+.action-report p{
+    font-size: 18px;
+}
+
+.content-item_empty-state{
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content-item_empty-state div a:hover{
+    text-decoration: underline                 m m ;
+}
+
 /* Responsividade (Para dispositivos móveis, a sidebar vai para baixo) */
 @media (max-width: 768px) {
     .feed-layout {
