@@ -1,84 +1,90 @@
 body{
-   background-image: URL('/public/img/background_login.png');
-   background-position: center center;
-   background-repeat: no-repeat;
-   background-size: cover;
+  background-color: rgb(255, 255, 255);
+  margin: 0;
+  height: 1vh;
+  overflow-y: hidden;
 }
 
 h1#title{
-    margin-top: 50px;
-    color:#f3eeea;
-    text-shadow: 1px 2px 2px rgba(54, 17, 2, 0.422);
+    margin-top: 20px;
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 20px;
     font-size:3em;
     font-family: 'WaterFall';
 }
 
 main{
     display:flex;
-    justify-content: center;
-    align-items: center;
     text-align: center;
+    align-items: center;
     flex-direction: row;
-    width:100%;
-    height:100%;
+    margin: 0;
+    padding: 0;
+    gap: 100px;
+}
+
+.lateral{
+    background-image: URL('/public/img/bacground-login.png');
+    background-repeat: no-repeat;
+    height: 640px;
+    width: 600px;
+    
+}
+
+.txt-intro{
+    margin-top: 200px;
+    color:#f3eeea;
+    font-family: 'WaterFall';
+}
+.txt-intro h1 {
+    font-size: 40pt;
+}
+.txt-intro p {
+    font-size: 20pt;
+}
+.txt-intro button{
+    margin-top: 20px;
+    border: none;
+    height: 30px;
+    width: 100px;
+    background-color: #B59410;
+    border-radius: 30px;
+}
+
+.txt-intro button a {
+    text-decoration: none;
+    color: white;
+    font-size: 10pt;
 }
 
 form{
-    margin-top: 15px;
-    background-color: whitesmoke;
-    padding:10px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.241);
-    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: start;
     width:500px;
     height:600px;
-    background-image:URL('/public/img/textura_carta_fundo.jpg');
-    border-radius: 10px;
-}
-
-#logo_container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #container_inputs{
+    margin-top: 30px;
     display:flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-picture{
-    align-items: center;
+#container_inputs div > input {
+   border: none;
+   border-bottom: 1px solid black;
+   width: 300px;
+   margin-bottom: 30px;
+   outline: none;
 }
 
-picture img{
-    width:80px;
-}
-
-form input{
-    border-radius: 5px;
-    border:1px solid rgb(63, 63, 63);
-    height:25px;
-    width:220px;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.235);
-    padding:3px;
-}
-
-form input:hover{
-    outline:2px solid black;
-}
-
-hr{
-    margin-bottom: 15px;
-    border:solid 1px rgba(34, 12, 1, 0.306);
-}
-
-p#ou_p{
-    margin: 10px 0px 10px;
+#container_inputs div > input :active {
+    outline: none;
 }
 
 a#esq_senha{
@@ -86,44 +92,19 @@ a#esq_senha{
     text-decoration: none;
     color:rgb(45, 23, 2);
     transition: 0.2s;
+    margin-top: -50px;
 }
 
 a#esq_senha:hover{
     text-decoration: underline;
 }
 
-#container_buttons{
-    margin-top: 30px;
-    text-align: center;
-}
-
-#container_buttons #btn_login{
-    margin-right: 10px;
-    width:120px;
-    height:35px;
-    border-radius: 5px;
-    border:0px solid transparent;
-    background-image: linear-gradient(120deg,rgb(148, 131, 119),rgb(136, 84, 50),rgb(108, 50, 11),rgb(53, 22, 1));
-    color:white;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.228);
-    cursor: pointer;
-    font-size: 1em;
-    transition: 0.2s;
-}
-
-#container_buttons #btn_login:hover{
-    width:123px;
-    height:38px;
-    font-size: 1.3em;
-}
-
-#btn-cadastro{
-    text-decoration: none;
-    font-size: 1em;
-    color:rgb(48, 26, 11);
-    transition: 0.2s;
-}
-
-#btn-cadastro:hover{
-    text-decoration: underline;
+#btn_login {
+    margin-top: 20px;
+    border: none;
+    height: 30px;
+    width: 100px;
+    background-color: #654321;
+    border-radius: 30px;
+    color: white;
 }

@@ -24,25 +24,45 @@
 
                 <form action="/register" method="POST">
                     <h1 id="title">Cadastro - Novo usuário</h1>
-                    <label for="username"><strong>Nome de Usuário:</strong></label>
-                    <input type="text" id="username" name="username" placeholder="Inserir nome" required><br><br>
+                    <div>
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                        <input type="text" id="username" name="username" placeholder="Inserir nome" required>
+                    </div>
 
-                    <label for="email"><strong>E-mail:</strong></label>
-                    <input type="email" id="email" name="email" placeholder="Inserir email" required><br><br>
+                    <div>
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" id="email" name="email" placeholder="Inserir email" required>
+                    </div>
 
-                    <label for="password"><strong>Senha:</strong></label>
-                    <input type="password" id="password" name="password" placeholder="Criar senha" required><br><br>
+                    <div>
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="password" name="password" placeholder="Criar senha" required>
+                    </div>
 
-                    <label for="confirm_password"><strong>Confirmar Senha:</strong></label>
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar senha"
-                        required><br><br>
+                    <div>
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar senha"required>
+                    </div>
 
                     <div id="container_buttons">
-                        <button id="btn_cadastro" type="submit">Cadastrar</button>
                         <a href="/login" id="btn_conta" class="btn-redirect">Já tenho conta</a>
+                        <button id="btn_cadastro" type="submit">Cadastrar</button>
                     </div>
                 </form>
+
+                
+        <div class="lateral">
+            <div class="txt-intro">
+                <h1>Between lines</h1>
+                <p>Bem-vindo(a) ao Between lines, um lugar onde você desfurtar da nostalgia de enviar cartas para alguém distante.</p>
+                <p>Tem conta conosco?</p>
+                <button><a href="/login"><strong>Faça login</strong></a></button>
+            </div>
+        </div>
+
     </main>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

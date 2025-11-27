@@ -15,38 +15,45 @@
 
 <body>
     <main>
+
+        <div class="lateral">
+            <div class="txt-intro">
+                <h1>Bem-vindo(a) de volta</h1>
+                <p>Não tem conta conosco?</p>
+                <button><a href="/register"><strong>Cadastre-se</strong></a></button>
+            </div>
+        </div>
+
+
         <form id="login" action="/login" method="POST">
             <div id="logo_container">
                 <picture>
-                    <img src="/public/img/logo_beetween_letter.png" alt="">
+                    <img src="/public/img/entrelinhas-logo.png" alt="" wqidth="150px" height="150px">
                 </picture>
             </div>
-            <h1 id="title">Login - Bem-vindo(a) de novo!</h1>
+            <h1 id="title">Login</h1>
             <div id="container_inputs">
-
                 <div>
-                    <label for="email"><strong>E-mail:</strong></label>
+                    <ion-icon name="mail-outline"></ion-icon>
                     <input type="email" id="email" name="email" placeholder="Inserir E-mail"><br><br>
                 </div>
 
                 <div>
-                    <label for="password"><strong>Senha:</strong></label>
+                    <ion-icon name="lock-closed-outline"></ion-icon>
                     <input type="password" id="password" name="password" placeholder="Inserir Senha"><br><br>
+                </div>
+                <div>
                     <a id="esq_senha" href="#">Esqueci a minha senha</a>
                 </div>
             </div>
 
-            <div id="container_buttons">
-                <hr>
+            <div id="container_button">
                 <button id="btn_login" type="submit">Entrar</button>
-                <p id="ou_p">ou</p>
-                <a href="/register" id="btn-cadastro"><strong>Fazer cadastro</strong></a>
             </div>
         </form>
-        <div id="fundo_login">
-
-        </div>
     </main>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>
